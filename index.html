@@ -1,762 +1,2733 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RK Company | Payroll Dashboard</title>
-<style>
-:root{--blue:#1647a5;--navy:#0b1736;--bg:#f5f7fb;--card:#fff;--line:#e5e9f2;--muted:#667085;--green:#138a52;--red:#c93636}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172033}
-button,input,select{font:inherit}
-.container{max-width:1250px;margin:auto;padding:20px}
-.hero{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:22px;padding:24px}
-.top{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}
-.brand h1{margin:0;font-size:29px}
-.brand p{margin:6px 0;color:#dbe5ff}
-.badge{display:inline-block;background:#ffffff18;border:1px solid #ffffff30;padding:7px 12px;border-radius:999px;font-size:12px}
-.actions{display:flex;gap:9px;flex-wrap:wrap}
-.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:700}
-.primary{background:#fff;color:#1242a0}
-.secondary{background:#ffffff14;color:#fff;border:1px solid #ffffff30}
-.company{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:20px}
-.info{padding:12px;border:1px solid #ffffff25;border-radius:12px;background:#ffffff0d}
-.info b{display:block;font-size:11px;color:#cbd7f7;margin-bottom:4px}
-.info span{font-size:14px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:18px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px}
-.metric small{color:var(--muted)}
-.metric strong{display:block;font-size:25px;margin-top:8px}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.section-title h2{margin:0 0 14px;font-size:20px}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.field{border:1px solid #d8deea;border-radius:10px;padding:11px 12px;background:#fff}
-.tablewrap{overflow:auto}
-.table{width:100%;border-collapse:collapse;min-width:900px}
-.table th,.table td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left}
-.table th{font-size:12px;color:var(--muted);background:#fafbfc}
-.table td{font-size:14px}
-.salary{font-weight:800}
-.pill{padding:5px 9px;border-radius:999px;background:#eaf7f0;color:var(--green);font-size:12px;font-weight:700}
-.iconbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 9px;margin-right:4px}
-.danger{color:var(--red)}
-.empty{text-align:center;padding:35px;color:var(--muted)}
-.two{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}
-.barrow{margin:13px 0}
-.barlabel{display:flex;justify-content:space-between;font-size:13px}
-.bar{height:9px;background:#edf0f5;border-radius:99px;overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:var(--blue);border-radius:99px}
-.modal{position:fixed;inset:0;background:#0b173688;display:none;align-items:center;justify-content:center;padding:15px;z-index:5}
-.modal.show{display:flex}
-.modalbox{background:#fff;border-radius:18px;padding:22px;max-width:650px;width:100%;max-height:90vh;overflow:auto}
-.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form label{font-size:12px;color:var(--muted);font-weight:700}
-.form input,.form select{width:100%;margin-top:5px;border:1px solid #d8deea;border-radius:9px;padding:10px}
-.full{grid-column:1/-1}
-.modalactions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}
-.note{font-size:12px;color:var(--muted);line-height:1.5}
-footer{text-align:center;color:#7a8497;padding:25px 10px;font-size:12px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RK Company | Payroll Management System</title>
 
-@media(max-width:850px){
-.company{grid-template-columns:repeat(2,1fr)}
-.stats{grid-template-columns:repeat(2,1fr)}
-.two{grid-template-columns:1fr}
+<style>
+:root{
+  --blue:#1647a5;
+  --navy:#0b1736;
+  --bg:#eef3fa;
+  --white:#fff;
+  --text:#17233d;
+  --muted:#69758d;
+  --green:#16804a;
+  --red:#c62828;
+  --orange:#d97706;
+  --border:#dce3ef;
 }
-@media(max-width:520px){
-.container{padding:10px}
-.company,.stats,.form{grid-template-columns:1fr}
-.hero{padding:18px}
-.brand h1{font-size:23px}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.container{
+  max-width:1250px;
+  margin:auto;
+  padding:20px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* LOGIN */
+
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#08132f,#1647a5);
+}
+
+.login-box{
+  width:100%;
+  max-width:430px;
+  background:white;
+  border-radius:24px;
+  padding:35px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
+
+.login-logo{
+  width:70px;
+  height:70px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#1647a5;
+  color:#fff;
+  font-size:28px;
+  font-weight:900;
+  margin-bottom:20px;
+}
+
+.login-box h1{
+  margin:0 0 8px;
+}
+
+.login-box p{
+  color:var(--muted);
+}
+
+.login-box label{
+  display:block;
+  margin-top:18px;
+  font-weight:700;
+}
+
+.login-box input{
+  width:100%;
+  padding:14px;
+  margin-top:7px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+}
+
+.login-btn{
+  width:100%;
+  margin-top:22px;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  background:var(--blue);
+  color:#fff;
+  font-weight:800;
+}
+
+/* HEADER */
+
+.hero{
+  background:linear-gradient(135deg,#0b1736,#1647a5);
+  color:white;
+  border-radius:24px;
+  padding:30px;
+  margin-bottom:20px;
+  box-shadow:0 15px 40px rgba(22,71,165,.18);
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+
+.brand h1{
+  margin:0;
+  font-size:34px;
+}
+
+.brand p{
+  margin:8px 0 15px;
+  color:#d9e4ff;
+  font-size:18px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:30px;
+  background:#ffffff18;
+  border:1px solid #ffffff35;
+  font-size:13px;
+  font-weight:700;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:0;
+  border-radius:11px;
+  padding:12px 17px;
+  font-weight:800;
+}
+
+.primary{
+  background:#fff;
+  color:#1647a5;
+}
+
+.secondary{
+  background:#ffffff18;
+  color:#fff;
+  border:1px solid #ffffff35;
+}
+
+.danger{
+  background:#ffe8e8;
+  color:#b42323;
+}
+
+.success{
+  background:#e6f8ee;
+  color:#137a43;
+}
+
+.company-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:25px;
+}
+
+.company-card{
+  border:1px solid #ffffff30;
+  background:#ffffff0d;
+  border-radius:16px;
+  padding:17px;
+}
+
+.company-card strong{
+  display:block;
+  color:#cbd9fa;
+  font-size:12px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.company-card span{
+  font-size:16px;
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 8px 25px rgba(20,40,80,.05);
+}
+
+.stat small{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.stat h2{
+  margin:9px 0 0;
+  font-size:28px;
+}
+
+/* TOOLBAR */
+
+.toolbar{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:17px;
+  margin-bottom:20px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.toolbar input,
+.toolbar select{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+}
+
+.toolbar input{
+  flex:1;
+  min-width:200px;
+}
+
+/* TABLE */
+
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.card-header h2{
+  margin:0;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1050px;
+}
+
+th,
+td{
+  padding:13px 10px;
+  border-bottom:1px solid #edf0f5;
+  text-align:left;
+  white-space:nowrap;
+}
+
+th{
+  background:#f6f8fc;
+  color:#59677f;
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+.employee-name{
+  font-weight:800;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.amount{
+  font-weight:800;
+}
+
+.status{
+  padding:6px 9px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.status.pending{
+  background:#fff3d6;
+  color:#9a6500;
+}
+
+.status.paid{
+  background:#dff7e9;
+  color:#11743f;
+}
+
+.mini-btn{
+  padding:7px 9px;
+  border:0;
+  border-radius:8px;
+  margin-right:4px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.edit{
+  background:#e7efff;
+  color:#174da8;
+}
+
+.delete{
+  background:#ffe8e8;
+  color:#bd2929;
+}
+
+.print{
+  background:#eef1f5;
+  color:#29364f;
+}
+
+/* CHART */
+
+.chart{
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+}
+
+.chart-row{
+  display:grid;
+  grid-template-columns:150px 1fr 100px;
+  align-items:center;
+  gap:12px;
+}
+
+.chart-bar{
+  height:14px;
+  background:#e9edf5;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.chart-fill{
+  height:100%;
+  background:#1647a5;
+  border-radius:20px;
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(4,12,30,.65);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:1000;
+}
+
+.modal.active{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:850px;
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:22px;
+  padding:25px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.modal-head h2{
+  margin:0;
+}
+
+.close{
+  border:0;
+  background:#eef1f6;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  font-size:22px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.form-group label{
+  display:block;
+  font-weight:700;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+}
+
+.form-full{
+  grid-column:1/-1;
+}
+
+.salary-preview{
+  margin-top:18px;
+  padding:18px;
+  background:#f5f8fd;
+  border-radius:15px;
+}
+
+.salary-preview-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
+.salary-box{
+  background:white;
+  padding:12px;
+  border-radius:10px;
+}
+
+.salary-box small{
+  color:var(--muted);
+}
+
+.salary-box strong{
+  display:block;
+  margin-top:5px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:20px;
+}
+
+/* FOOTER */
+
+.footer{
+  text-align:center;
+  color:#77829a;
+  padding:20px;
+  font-size:13px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .company-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .salary-preview-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:600px){
+  .container{
+    padding:12px;
+  }
+
+  .hero{
+    padding:22px;
+    border-radius:20px;
+  }
+
+  .brand h1{
+    font-size:28px;
+  }
+
+  .brand p{
+    font-size:16px;
+  }
+
+  .company-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-full{
+    grid-column:auto;
+  }
+
+  .salary-preview-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .chart-row{
+    grid-template-columns:100px 1fr 80px;
+    font-size:12px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+
+    <div class="login-logo">RK</div>
+
+    <h1>RK COMPANY</h1>
+    <p>Payroll & Salary Management System</p>
+
+    <label>Email</label>
+    <input id="loginEmail" type="email" placeholder="admin@company.com">
+
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Enter password">
+
+    <button class="login-btn" onclick="login()">
+      Login
+    </button>
+
+    <p id="loginMessage"></p>
+
+  </div>
+</div>
+
+
+<!-- MAIN APP -->
+
+<div id="app" class="hidden">
+
 <div class="container">
 
-<header class="hero">
+<!-- HERO -->
 
-<div class="top">
+<section class="hero">
 
-<div class="brand">
-<h1>RK COMPANY</h1>
-<p>Professional Payroll & Salary Management</p>
-<span class="badge">DEMO VERSION • 2027</span>
-</div>
+  <div class="top">
 
-<div class="actions">
-<button class="btn primary" onclick="openModal()">+ Add Employee</button>
-<button class="btn secondary" onclick="printReport()">Print Report</button>
-</div>
+    <div class="brand">
 
-</div>
+      <h1>RK COMPANY</h1>
 
-<div class="company">
+      <p>
+        Professional Payroll & Salary Management
+      </p>
 
-<div class="info">
-<b>COMPANY TYPE</b>
-<span>Manufacturing Unit</span>
-</div>
+      <span class="badge">
+        COMPANY PAYROLL • 2027
+      </span>
 
-<div class="info">
-<b>LOCATION</b>
-<span>Vadodara, India</span>
-</div>
+    </div>
 
-<div class="info">
-<b>PHONE</b>
-<span>+91 XXXXX XXXXX</span>
-</div>
+    <div class="actions">
 
-<div class="info">
-<b>EMAIL</b>
-<span>payroll@example.com</span>
-</div>
+      <button class="btn primary" onclick="openEmployeeModal()">
+        + Add Employee
+      </button>
 
-<div class="info">
-<b>STATUS</b>
-<span>● Payroll Active</span>
-</div>
+      <button class="btn secondary" onclick="printReport()">
+        Print Report
+      </button>
 
-</div>
+      <button class="btn secondary" onclick="markAllPaid()">
+        Mark Payroll Paid
+      </button>
 
-</header>
+      <button class="btn secondary" onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="company-grid">
+
+    <div class="company-card">
+      <strong>Company Type</strong>
+      <span>Manufacturing Unit</span>
+    </div>
+
+    <div class="company-card">
+      <strong>Location</strong>
+      <span>Vadodara, India</span>
+    </div>
+
+    <div class="company-card">
+      <strong>Payroll Status</strong>
+      <span>● Payroll Active</span>
+    </div>
+
+    <div class="company-card">
+      <strong>Phone</strong>
+      <span>+91 XXXXX XXXXX</span>
+    </div>
+
+    <div class="company-card">
+      <strong>Email</strong>
+      <span>payroll@example.com</span>
+    </div>
+
+    <div class="company-card">
+      <strong>System</strong>
+      <span>Cloud Payroll</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- STATS -->
 
 <section class="stats">
 
-<div class="card metric">
-<small>Total Employees</small>
-<strong id="count">0</strong>
-</div>
+  <div class="stat">
+    <small>Total Employees</small>
+    <h2 id="totalEmployees">0</h2>
+  </div>
 
-<div class="card metric">
-<small>Total Salary Payable</small>
-<strong id="total">₹0</strong>
-</div>
+  <div class="stat">
+    <small>Total Salary Payable</small>
+    <h2 id="totalSalary">₹0</h2>
+  </div>
 
-<div class="card metric">
-<small>Average Salary</small>
-<strong id="avg">₹0</strong>
-</div>
+  <div class="stat">
+    <small>Average Salary</small>
+    <h2 id="averageSalary">₹0</h2>
+  </div>
 
-<div class="card metric">
-<small>Departments</small>
-<strong id="departments">0</strong>
-</div>
+  <div class="stat">
+    <small>Total Departments</small>
+    <h2 id="totalDepartments">0</h2>
+  </div>
 
 </section>
 
-<section class="card">
 
-<div class="section-title">
-<h2>Employee Payroll</h2>
-<span class="pill">Local Demo Storage</span>
-</div>
+<!-- TOOLBAR -->
 
 <div class="toolbar">
 
-<input
-id="search"
-class="field"
-placeholder="Search employee or ID..."
-oninput="render()"
->
+  <input
+    id="search"
+    type="search"
+    placeholder="Search employee, ID or department..."
+    oninput="renderEmployees()"
+  >
 
-<select
-id="filter"
-class="field"
-onchange="render()"
->
-<option value="">All Departments</option>
-</select>
+  <select id="departmentFilter" onchange="renderEmployees()">
+    <option value="">All Departments</option>
+  </select>
 
-<button
-class="btn"
-style="background:#edf3ff;color:#1647a5"
-onclick="resetDemo()"
->
-Reset Demo Data
-</button>
+  <button class="btn primary" onclick="openEmployeeModal()">
+    + Add Employee
+  </button>
 
 </div>
 
-<div class="tablewrap">
 
-<table class="table">
-
-<thead>
-<tr>
-<th>Employee</th>
-<th>ID</th>
-<th>Department</th>
-<th>Days</th>
-<th>Daily Pay</th>
-<th>Salary</th>
-<th>Actions</th>
-</tr>
-</thead>
-
-<tbody id="rows"></tbody>
-
-</table>
-
-</div>
-
-</section>
-
-<div class="two">
+<!-- EMPLOYEE TABLE -->
 
 <section class="card">
 
-<h2>Department Salary</h2>
+  <div class="card-header">
 
-<div id="chart"></div>
+    <h2>Employee Payroll</h2>
+
+    <span class="muted">
+      Attendance based salary calculation
+    </span>
+
+  </div>
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Employee</th>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Present</th>
+          <th>Working</th>
+          <th>Basic Salary</th>
+          <th>Allowance</th>
+          <th>Overtime</th>
+          <th>Deduction</th>
+          <th>Tax</th>
+          <th>Net Salary</th>
+          <th>Status</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="employeeTable"></tbody>
+
+    </table>
+
+  </div>
 
 </section>
+
+
+<!-- DEPARTMENT CHART -->
 
 <section class="card">
 
-<h2>Payroll Notes</h2>
+  <div class="card-header">
 
-<p class="note">
-This is a front-end demo for presentation and testing.
-It does not make real bank payments, send SMS/WhatsApp automatically,
-or provide secure payroll storage.
-</p>
+    <h2>Department Salary Summary</h2>
 
-<p class="note">
-For a real company deployment, add authenticated users,
-a secure database, server-side validation, audit logs and encrypted payroll data.
-</p>
+  </div>
+
+  <div id="departmentChart" class="chart"></div>
 
 </section>
 
-</div>
 
-<footer>
-RK Company Payroll Dashboard • Demo data only • Replace all demo/company details before delivery
-</footer>
+<!-- PAYROLL INFORMATION -->
 
-</div>
+<section class="card">
 
-<div id="modal" class="modal">
+  <div class="card-header">
 
-<div class="modalbox">
+    <h2>Payroll Features</h2>
 
-<h2 id="modalTitle">Add Employee</h2>
+  </div>
 
-<form class="form" onsubmit="saveEmployee(event)">
+  <div class="company-grid">
 
-<input type="hidden" id="editId">
+    <div class="company-card" style="color:#17233d;background:#f7f9fc;border-color:#dce3ef;">
+      <strong style="color:#66738a;">Salary Calculation</strong>
+      Attendance + Allowance + Overtime - Deduction - Tax
+    </div>
 
-<label>
-Employee Name
-<input id="name" required>
-</label>
+    <div class="company-card" style="color:#17233d;background:#f7f9fc;border-color:#dce3ef;">
+      <strong style="color:#66738a;">Payslip</strong>
+      Professional printable employee payslip
+    </div>
 
-<label>
-Employee ID
-<input id="empid" required>
-</label>
+    <div class="company-card" style="color:#17233d;background:#f7f9fc;border-color:#dce3ef;">
+      <strong style="color:#66738a;">Reports</strong>
+      Monthly payroll and department reports
+    </div>
 
-<label>
-Department
-<select id="dept">
-<option>Production</option>
-<option>Sales</option>
-<option>Marketing</option>
-<option>HR</option>
-<option>Finance</option>
-<option>IT</option>
-<option>Logistics</option>
-</select>
-</label>
+    <div class="company-card" style="color:#17233d;background:#f7f9fc;border-color:#dce3ef;">
+      <strong style="color:#66738a;">Cloud Database</strong>
+      Employee records stored in Firebase Firestore
+    </div>
 
-<label>
-Present Days
-<input id="days" type="number" min="0" value="26" required>
-</label>
+  </div>
 
-<label>
-Working Days
-<input id="working" type="number" min="1" value="26" required>
-</label>
+</section>
 
-<label>
-Daily Salary
-<input id="daily" type="number" min="0" value="800" required>
-</label>
 
-<label class="full">
-Designation
-<input id="designation" placeholder="e.g. Supervisor">
-</label>
-
-<div class="full note">
-Demo only: do not enter real bank account numbers,
-IFSC codes or other sensitive employee data on this GitHub Pages demo.
-</div>
-
-<div class="modalactions full">
-
-<button
-type="button"
-class="btn"
-onclick="closeModal()"
->
-Cancel
-</button>
-
-<button
-class="btn primary"
-type="submit"
->
-Save Employee
-</button>
-
-</div>
-
-</form>
-
+<div class="footer">
+  RK Company Payroll System • Secure payroll software • 2027
 </div>
 
 </div>
+</div>
+
+
+<!-- EMPLOYEE MODAL -->
+
+<div id="employeeModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2 id="modalTitle">
+        Add Employee
+      </h2>
 
-<script>
-
-const DEMO=[
-
-{
-name:"Aarav Patel",
-id:"RK001",
-dept:"Production",
-days:26,
-working:26,
-daily:900,
-designation:"Supervisor"
-},
-
-{
-name:"Diya Shah",
-id:"RK002",
-dept:"HR",
-days:25,
-working:26,
-daily:850,
-designation:"HR Executive"
-},
-
-{
-name:"Kabir Mehta",
-id:"RK003",
-dept:"Finance",
-days:24,
-working:26,
-daily:1000,
-designation:"Account Executive"
-},
-
-{
-name:"Mira Joshi",
-id:"RK004",
-dept:"Sales",
-days:26,
-working:26,
-daily:800,
-designation:"Sales Executive"
-},
+      <button class="close" onclick="closeEmployeeModal()">
+        ×
+      </button>
 
-{
-name:"Vivaan Desai",
-id:"RK005",
-dept:"IT",
-days:23,
-working:26,
-daily:1100,
-designation:"IT Support"
-},
+    </div>
 
-{
-name:"Anaya Shah",
-id:"RK006",
-dept:"Marketing",
-days:25,
-working:26,
-daily:950,
-designation:"Marketing Executive"
-}
 
-];
+    <div class="form-grid">
 
-let data=
-JSON.parse(localStorage.getItem("rkPayrollDemo")||"null")
-||DEMO;
+      <div class="form-group">
+        <label>Employee Name</label>
+        <input id="employeeName" placeholder="Employee name">
+      </div>
 
-const money=n=>
-"₹"+Math.round(n).toLocaleString("en-IN");
+      <div class="form-group">
+        <label>Employee ID</label>
+        <input id="employeeId" placeholder="EMP001">
+      </div>
 
-const salary=e=>
-Math.min(+e.days,+e.working)*+e.daily;
+      <div class="form-group">
+        <label>Department</label>
+        <select id="employeeDepartment">
+          <option>Production</option>
+          <option>HR</option>
+          <option>Accounts</option>
+          <option>IT</option>
+          <option>Sales</option>
+          <option>Administration</option>
+          <option>Quality</option>
+          <option>Maintenance</option>
+        </select>
+      </div>
 
-function save(){
+      <div class="form-group">
+        <label>Designation</label>
+        <input id="employeeDesignation" placeholder="Designation">
+      </div>
 
-localStorage.setItem(
-"rkPayrollDemo",
-JSON.stringify(data)
-);
+      <div class="form-group">
+        <label>Present Days</label>
+        <input id="presentDays" type="number" min="0" value="26" oninput="previewSalary()">
+      </div>
 
-}
+      <div class="form-group">
+        <label>Working Days</label>
+        <input id="workingDays" type="number" min="1" value="26" oninput="previewSalary()">
+      </div>
 
-function resetDemo(){
+      <div class="form-group">
+        <label>Daily Salary</label>
+        <input id="dailySalary" type="number" min="0" value="1000" oninput="previewSalary()">
+      </div>
 
-if(confirm("Reset the demo employee list?")){
+      <div class="form-group">
+        <label>Allowance</label>
+        <input id="allowance" type="number" min="0" value="0" oninput="previewSalary()">
+      </div>
 
-data=DEMO.map(x=>({...x}));
+      <div class="form-group">
+        <label>Overtime Amount</label>
+        <input id="overtime" type="number" min="0" value="0" oninput="previewSalary()">
+      </div>
 
-save();
+      <div class="form-group">
+        <label>Deduction</label>
+        <input id="deduction" type="number" min="0" value="0" oninput="previewSalary()">
+      </div>
 
-render();
+      <div class="form-group">
+        <label>Tax / TDS</label>
+        <input id="tax" type="number" min="0" value="0" oninput="previewSalary()">
+      </div>
 
-}
+      <div class="form-group">
+        <label>Phone</label>
+        <input id="phone" placeholder="+91...">
+      </div>
 
-}
+      <div class="form-group">
+        <label>Bank Name</label>
+        <input id="bankName" placeholder="Bank name">
+      </div>
 
-function render(){
+      <div class="form-group">
+        <label>Account Number</label>
+        <input id="accountNumber" placeholder="Account number">
+      </div>
 
-const q=
-document.getElementById("search")
-.value
-.toLowerCase();
+      <div class="form-group">
+        <label>IFSC</label>
+        <input id="ifsc" placeholder="IFSC code">
+      </div>
 
-const f=
-document.getElementById("filter")
-.value;
+    </div>
 
-const depts=
-[...new Set(data.map(e=>e.dept))]
-.sort();
 
-document.getElementById("filter").innerHTML=
-'<option value="">All Departments</option>'+
-depts.map(d=>
-`<option ${d===f?"selected":""}>${d}</option>`
-).join("");
+    <div class="salary-preview">
 
-const list=data.filter(e=>
+      <h3>Salary Preview</h3>
 
-(!q ||
-(`${e.name} ${e.id} ${e.dept}`)
-.toLowerCase()
-.includes(q))
+      <div class="salary-preview-grid">
 
-&&
+        <div class="salary-box">
+          <small>Attendance Salary</small>
+          <strong id="previewAttendance">₹0</strong>
+        </div>
 
-(!f || e.dept===f)
+        <div class="salary-box">
+          <small>Gross Salary</small>
+          <strong id="previewGross">₹0</strong>
+        </div>
 
-);
+        <div class="salary-box">
+          <small>Total Deduction</small>
+          <strong id="previewDeduction">₹0</strong>
+        </div>
 
-document.getElementById("rows").innerHTML=
+        <div class="salary-box">
+          <small>Net Salary</small>
+          <strong id="previewNet">₹0</strong>
+        </div>
 
-list.length
+      </div>
 
-?
+    </div>
 
-list.map(e=>
 
-`<tr>
+    <div class="modal-actions">
 
-<td>
-<b>${esc(e.name)}</b>
-<br>
-<span style="color:#667085;font-size:12px">
-${esc(e.designation||"")}
-</span>
-</td>
+      <button class="btn danger" onclick="closeEmployeeModal()">
+        Cancel
+      </button>
 
-<td>${esc(e.id)}</td>
+      <button class="btn primary" onclick="saveEmployee()">
+        Save Employee
+      </button>
 
-<td>${esc(e.dept)}</td>
+    </div>
 
-<td>${e.days}/${e.working}</td>
-
-<td>${money(e.daily)}</td>
-
-<td class="salary">
-${money(salary(e))}
-</td>
-
-<td>
-
-<button
-class="iconbtn"
-onclick="editEmployee('${e.id}')"
->
-Edit
-</button>
-
-<button
-class="iconbtn danger"
-onclick="deleteEmployee('${e.id}')"
->
-Delete
-</button>
-
-</td>
-
-</tr>`
-
-).join("")
-
-:
-
-`<tr>
-<td colspan="7" class="empty">
-No employees found
-</td>
-</tr>`;
-
-const total=
-data.reduce(
-(s,e)=>s+salary(e),
-0
-);
-
-document.getElementById("count")
-.textContent=data.length;
-
-document.getElementById("total")
-.textContent=money(total);
-
-document.getElementById("avg")
-.textContent=
-money(data.length?total/data.length:0);
-
-document.getElementById("departments")
-.textContent=depts.length;
-
-const sums={};
-
-data.forEach(e=>{
-
-sums[e.dept]=
-(sums[e.dept]||0)+salary(e);
-
-});
-
-const max=
-Math.max(
-...Object.values(sums),
-1
-);
-
-document.getElementById("chart").innerHTML=
-
-Object.entries(sums)
-.sort((a,b)=>b[1]-a[1])
-.map(([d,v])=>
-
-`<div class="barrow">
-
-<div class="barlabel">
-
-<span>${esc(d)}</span>
-
-<b>${money(v)}</b>
+  </div>
 
 </div>
 
-<div class="bar">
 
-<i style="width:${v/max*100}%"></i>
+<script type="module">
 
-</div>
+/*
+==========================================================
+FIREBASE CONFIGURATION
+==========================================================
 
-</div>`
+Firebase Console →
+Project Settings →
+Your Apps →
+Web App →
 
-)
-.join("")
+Replace the values below with your Firebase configuration.
+==========================================================
+*/
 
-||
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 
-'<p class="note">No data</p>';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-}
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-function esc(s){
 
-return String(s).replace(
-/[&<>"']/g,
-c=>({
+const firebaseConfig = {
 
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
+  apiKey: "PASTE_YOUR_API_KEY",
 
-}[c])
-);
+  authDomain: "PASTE_YOUR_AUTH_DOMAIN",
 
-}
+  projectId: "PASTE_YOUR_PROJECT_ID",
 
-function openModal(id=null){
+  storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
 
-document
-.getElementById("modal")
-.classList.add("show");
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
 
-document
-.getElementById("editId")
-.value=id||"";
-
-if(id){
-
-const e=
-data.find(x=>x.id===id);
-
-document
-.getElementById("modalTitle")
-.textContent="Edit Employee";
-
-[
-"name",
-"empid",
-"dept",
-"days",
-"working",
-"daily",
-"designation"
-]
-.forEach(k=>
-
-document.getElementById(k).value=
-k==="empid"
-?e.id
-:e[k]||""
-
-);
-
-}
-
-else{
-
-document
-.getElementById("modalTitle")
-.textContent="Add Employee";
-
-document
-.querySelector("form")
-.reset();
-
-document
-.getElementById("days")
-.value=26;
-
-document
-.getElementById("working")
-.value=26;
-
-document
-.getElementById("daily")
-.value=800;
-
-}
-
-}
-
-function closeModal(){
-
-document
-.getElementById("modal")
-.classList.remove("show");
-
-}
-
-function saveEmployee(ev){
-
-ev.preventDefault();
-
-const old=
-document.getElementById("editId").value;
-
-const e={
-
-name:name.value.trim(),
-
-id:empid.value.trim(),
-
-dept:dept.value,
-
-days:+days.value,
-
-working:+working.value,
-
-daily:+daily.value,
-
-designation:designation.value.trim()
+  appId: "PASTE_YOUR_APP_ID"
 
 };
 
-if(old){
 
-const i=
-data.findIndex(x=>x.id===old);
+const firebaseApp = initializeApp(firebaseConfig);
 
-data[i]=e;
+const auth = getAuth(firebaseApp);
+
+const db = getFirestore(firebaseApp);
+
+
+let employees = [];
+
+let editingId = null;
+
+
+/* =========================
+   AUTH
+========================= */
+
+window.login = async function(){
+
+  const email =
+    document.getElementById("loginEmail").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  const message =
+    document.getElementById("loginMessage");
+
+  if(!email || !password){
+
+    message.textContent =
+      "Please enter email and password.";
+
+    return;
+  }
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    message.textContent = "";
+
+  }catch(error){
+
+    message.textContent =
+      "Login failed: " + error.message;
+
+  }
+
+};
+
+
+window.logout = async function(){
+
+  await signOut(auth);
+
+};
+
+
+onAuthStateChanged(auth, async(user)=>{
+
+  if(user){
+
+    document
+      .getElementById("loginScreen")
+      .classList.add("hidden");
+
+    document
+      .getElementById("app")
+      .classList.remove("hidden");
+
+    await loadEmployees();
+
+  }else{
+
+    document
+      .getElementById("loginScreen")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("app")
+      .classList.add("hidden");
+
+  }
+
+});
+
+
+/* =========================
+   SALARY
+========================= */
+
+function calculateSalary(e){
+
+  const present =
+    Number(e.presentDays || 0);
+
+  const working =
+    Number(e.workingDays || 1);
+
+  const daily =
+    Number(e.dailySalary || 0);
+
+  const allowance =
+    Number(e.allowance || 0);
+
+  const overtime =
+    Number(e.overtime || 0);
+
+  const deduction =
+    Number(e.deduction || 0);
+
+  const tax =
+    Number(e.tax || 0);
+
+  const attendanceSalary =
+    Math.min(present,working) * daily;
+
+  const gross =
+    attendanceSalary +
+    allowance +
+    overtime;
+
+  const totalDeduction =
+    deduction +
+    tax;
+
+  const net =
+    Math.max(
+      0,
+      gross - totalDeduction
+    );
+
+  return {
+    attendanceSalary,
+    gross,
+    totalDeduction,
+    net
+  };
 
 }
 
-else{
 
-if(data.some(x=>x.id===e.id)){
+function money(value){
 
-alert("Employee ID already exists.");
-
-return;
-
-}
-
-data.push(e);
-
-}
-
-save();
-
-closeModal();
-
-render();
+  return new Intl.NumberFormat(
+    "en-IN",
+    {
+      style:"currency",
+      currency:"INR",
+      maximumFractionDigits:0
+    }
+  ).format(value || 0);
 
 }
 
-function editEmployee(id){
 
-openModal(id);
+/* =========================
+   LOAD EMPLOYEES
+========================= */
+
+async function loadEmployees(){
+
+  try{
+
+    const q =
+      query(
+        collection(db,"employees"),
+        orderBy("createdAt","desc")
+      );
+
+    const snapshot =
+      await getDocs(q);
+
+    employees =
+      snapshot.docs.map(item=>({
+
+        id:item.id,
+
+        ...item.data()
+
+      }));
+
+    renderEmployees();
+
+  }catch(error){
+
+    console.error(error);
+
+    /*
+      If Firestore has no createdAt/order issue,
+      try normal collection read.
+    */
+
+    try{
+
+      const snapshot =
+        await getDocs(
+          collection(db,"employees")
+        );
+
+      employees =
+        snapshot.docs.map(item=>({
+
+          id:item.id,
+
+          ...item.data()
+
+        }));
+
+      renderEmployees();
+
+    }catch(secondError){
+
+      alert(
+        "Firebase Firestore error: " +
+        secondError.message
+      );
+
+    }
+
+  }
 
 }
 
-function deleteEmployee(id){
 
-if(confirm("Delete this employee?")){
+/* =========================
+   RENDER
+========================= */
 
-data=
-data.filter(e=>e.id!==id);
+window.renderEmployees = function(){
 
-save();
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
 
-render();
+  const department =
+    document
+      .getElementById("departmentFilter")
+      .value;
+
+  const filtered =
+    employees.filter(e=>{
+
+      const text =
+        (
+          e.name +
+          " " +
+          e.employeeId +
+          " " +
+          e.department
+        ).toLowerCase();
+
+      const searchMatch =
+        !search ||
+        text.includes(search);
+
+      const deptMatch =
+        !department ||
+        e.department === department;
+
+      return searchMatch && deptMatch;
+
+    });
+
+
+  const tbody =
+    document.getElementById("employeeTable");
+
+  tbody.innerHTML = "";
+
+
+  filtered.forEach(e=>{
+
+    const salary =
+      calculateSalary(e);
+
+    const row =
+      document.createElement("tr");
+
+    row.innerHTML = `
+
+      <td>
+        <div class="employee-name">
+          ${escapeHtml(e.name || "")}
+        </div>
+        <div class="muted">
+          ${escapeHtml(e.designation || "")}
+        </div>
+      </td>
+
+      <td>
+        ${escapeHtml(e.employeeId || "")}
+      </td>
+
+      <td>
+        ${escapeHtml(e.department || "")}
+      </td>
+
+      <td>
+        ${Number(e.presentDays || 0)}
+      </td>
+
+      <td>
+        ${Number(e.workingDays || 0)}
+      </td>
+
+      <td>
+        ${money(
+          Number(e.dailySalary || 0) *
+          Number(e.workingDays || 0)
+        )}
+      </td>
+
+      <td>
+        ${money(e.allowance)}
+      </td>
+
+      <td>
+        ${money(e.overtime)}
+      </td>
+
+      <td>
+        ${money(e.deduction)}
+      </td>
+
+      <td>
+        ${money(e.tax)}
+      </td>
+
+      <td class="amount">
+        ${money(salary.net)}
+      </td>
+
+      <td>
+        <span class="status ${
+          e.status === "paid"
+            ? "paid"
+            : "pending"
+        }">
+          ${
+            e.status === "paid"
+              ? "Paid"
+              : "Pending"
+          }
+        </span>
+      </td>
+
+      <td>
+
+        <button
+          class="mini-btn print"
+          onclick="printPayslip('${e.id}')">
+          Payslip
+        </button>
+
+        <button
+          class="mini-btn edit"
+          onclick="editEmployee('${e.id}')">
+          Edit
+        </button>
+
+        <button
+          class="mini-btn delete"
+          onclick="deleteEmployee('${e.id}')">
+          Delete
+        </button>
+
+      </td>
+
+    `;
+
+    tbody.appendChild(row);
+
+  });
+
+
+  updateStats();
+
+  updateDepartmentFilter();
+
+  renderDepartmentChart();
+
+};
+
+
+function escapeHtml(value){
+
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
+
+/* =========================
+   STATS
+========================= */
+
+function updateStats(){
+
+  const total =
+    employees.length;
+
+  const totalSalary =
+    employees.reduce(
+      (sum,e)=>
+        sum + calculateSalary(e).net,
+      0
+    );
+
+  const average =
+    total
+      ? totalSalary / total
+      : 0;
+
+  const departments =
+    new Set(
+      employees.map(e=>e.department)
+    ).size;
+
+
+  document.getElementById(
+    "totalEmployees"
+  ).textContent = total;
+
+  document.getElementById(
+    "totalSalary"
+  ).textContent = money(totalSalary);
+
+  document.getElementById(
+    "averageSalary"
+  ).textContent = money(average);
+
+  document.getElementById(
+    "totalDepartments"
+  ).textContent = departments;
+
 }
 
-function printReport(){
 
-window.print();
+/* =========================
+   DEPARTMENT FILTER
+========================= */
+
+function updateDepartmentFilter(){
+
+  const select =
+    document.getElementById(
+      "departmentFilter"
+    );
+
+  const current =
+    select.value;
+
+  const departments =
+    [...new Set(
+      employees
+        .map(e=>e.department)
+        .filter(Boolean)
+    )].sort();
+
+  select.innerHTML =
+    `<option value="">All Departments</option>`;
+
+  departments.forEach(dept=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value = dept;
+
+    option.textContent = dept;
+
+    select.appendChild(option);
+
+  });
+
+  select.value = current;
 
 }
 
-render();
+
+/* =========================
+   DEPARTMENT CHART
+========================= */
+
+function renderDepartmentChart(){
+
+  const chart =
+    document.getElementById(
+      "departmentChart"
+    );
+
+  chart.innerHTML = "";
+
+  const totals = {};
+
+  employees.forEach(e=>{
+
+    const dept =
+      e.department || "Other";
+
+    totals[dept] =
+      (totals[dept] || 0) +
+      calculateSalary(e).net;
+
+  });
+
+
+  const values =
+    Object.entries(totals);
+
+  if(!values.length){
+
+    chart.innerHTML =
+      `<p class="muted">
+        No employee data available.
+      </p>`;
+
+    return;
+
+  }
+
+
+  const max =
+    Math.max(
+      ...values.map(x=>x[1])
+    );
+
+
+  values
+    .sort((a,b)=>b[1]-a[1])
+    .forEach(([dept,total])=>{
+
+      const percentage =
+        max
+          ? (total / max) * 100
+          : 0;
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "chart-row";
+
+      row.innerHTML = `
+
+        <strong>
+          ${escapeHtml(dept)}
+        </strong>
+
+        <div class="chart-bar">
+          <div
+            class="chart-fill"
+            style="width:${percentage}%">
+          </div>
+        </div>
+
+        <strong>
+          ${money(total)}
+        </strong>
+
+      `;
+
+      chart.appendChild(row);
+
+    });
+
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+window.openEmployeeModal =
+function(employee=null){
+
+  editingId =
+    employee ? employee.id : null;
+
+  document.getElementById(
+    "modalTitle"
+  ).textContent =
+    employee
+      ? "Edit Employee"
+      : "Add Employee";
+
+
+  document.getElementById(
+    "employeeName"
+  ).value =
+    employee?.name || "";
+
+
+  document.getElementById(
+    "employeeId"
+  ).value =
+    employee?.employeeId || "";
+
+
+  document.getElementById(
+    "employeeDepartment"
+  ).value =
+    employee?.department || "Production";
+
+
+  document.getElementById(
+    "employeeDesignation"
+  ).value =
+    employee?.designation || "";
+
+
+  document.getElementById(
+    "presentDays"
+  ).value =
+    employee?.presentDays ?? 26;
+
+
+  document.getElementById(
+    "workingDays"
+  ).value =
+    employee?.workingDays ?? 26;
+
+
+  document.getElementById(
+    "dailySalary"
+  ).value =
+    employee?.dailySalary ?? 1000;
+
+
+  document.getElementById(
+    "allowance"
+  ).value =
+    employee?.allowance ?? 0;
+
+
+  document.getElementById(
+    "overtime"
+  ).value =
+    employee?.overtime ?? 0;
+
+
+  document.getElementById(
+    "deduction"
+  ).value =
+    employee?.deduction ?? 0;
+
+
+  document.getElementById(
+    "tax"
+  ).value =
+    employee?.tax ?? 0;
+
+
+  document.getElementById(
+    "phone"
+  ).value =
+    employee?.phone || "";
+
+
+  document.getElementById(
+    "bankName"
+  ).value =
+    employee?.bankName || "";
+
+
+  document.getElementById(
+    "accountNumber"
+  ).value =
+    employee?.accountNumber || "";
+
+
+  document.getElementById(
+    "ifsc"
+  ).value =
+    employee?.ifsc || "";
+
+
+  previewSalary();
+
+
+  document
+    .getElementById("employeeModal")
+    .classList.add("active");
+
+};
+
+
+window.closeEmployeeModal =
+function(){
+
+  document
+    .getElementById("employeeModal")
+    .classList.remove("active");
+
+  editingId = null;
+
+};
+
+
+window.editEmployee =
+function(id){
+
+  const employee =
+    employees.find(
+      e=>e.id === id
+    );
+
+  if(employee){
+
+    openEmployeeModal(employee);
+
+  }
+
+};
+
+
+/* =========================
+   PREVIEW
+========================= */
+
+window.previewSalary =
+function(){
+
+  const employee = {
+
+    presentDays:
+      Number(
+        document.getElementById(
+          "presentDays"
+        ).value
+      ),
+
+    workingDays:
+      Number(
+        document.getElementById(
+          "workingDays"
+        ).value
+      ),
+
+    dailySalary:
+      Number(
+        document.getElementById(
+          "dailySalary"
+        ).value
+      ),
+
+    allowance:
+      Number(
+        document.getElementById(
+          "allowance"
+        ).value
+      ),
+
+    overtime:
+      Number(
+        document.getElementById(
+          "overtime"
+        ).value
+      ),
+
+    deduction:
+      Number(
+        document.getElementById(
+          "deduction"
+        ).value
+      ),
+
+    tax:
+      Number(
+        document.getElementById(
+          "tax"
+        ).value
+      )
+
+  };
+
+
+  const salary =
+    calculateSalary(employee);
+
+
+  document.getElementById(
+    "previewAttendance"
+  ).textContent =
+    money(salary.attendanceSalary);
+
+
+  document.getElementById(
+    "previewGross"
+  ).textContent =
+    money(salary.gross);
+
+
+  document.getElementById(
+    "previewDeduction"
+  ).textContent =
+    money(salary.totalDeduction);
+
+
+  document.getElementById(
+    "previewNet"
+  ).textContent =
+    money(salary.net);
+
+};
+
+
+/* =========================
+   SAVE EMPLOYEE
+========================= */
+
+window.saveEmployee =
+async function(){
+
+  const name =
+    document
+      .getElementById("employeeName")
+      .value
+      .trim();
+
+  const employeeId =
+    document
+      .getElementById("employeeId")
+      .value
+      .trim();
+
+  const department =
+    document
+      .getElementById("employeeDepartment")
+      .value;
+
+  const designation =
+    document
+      .getElementById("employeeDesignation")
+      .value
+      .trim();
+
+  if(!name || !employeeId){
+
+    alert(
+      "Employee name and ID are required."
+    );
+
+    return;
+
+  }
+
+
+  const data = {
+
+    name,
+
+    employeeId,
+
+    department,
+
+    designation,
+
+    presentDays:
+      Number(
+        document.getElementById(
+          "presentDays"
+        ).value
+      ),
+
+    workingDays:
+      Number(
+        document.getElementById(
+          "workingDays"
+        ).value
+      ),
+
+    dailySalary:
+      Number(
+        document.getElementById(
+          "dailySalary"
+        ).value
+      ),
+
+    allowance:
+      Number(
+        document.getElementById(
+          "allowance"
+        ).value
+      ),
+
+    overtime:
+      Number(
+        document.getElementById(
+          "overtime"
+        ).value
+      ),
+
+    deduction:
+      Number(
+        document.getElementById(
+          "deduction"
+        ).value
+      ),
+
+    tax:
+      Number(
+        document.getElementById(
+          "tax"
+        ).value
+      ),
+
+    phone:
+      document.getElementById(
+        "phone"
+      ).value.trim(),
+
+    bankName:
+      document.getElementById(
+        "bankName"
+      ).value.trim(),
+
+    accountNumber:
+      document.getElementById(
+        "accountNumber"
+      ).value.trim(),
+
+    ifsc:
+      document.getElementById(
+        "ifsc"
+      ).value.trim(),
+
+    status:"pending"
+
+  };
+
+
+  try{
+
+    if(editingId){
+
+      await updateDoc(
+        doc(
+          db,
+          "employees",
+          editingId
+        ),
+        {
+          ...data,
+          updatedAt:serverTimestamp()
+        }
+      );
+
+      alert(
+        "Employee updated successfully."
+      );
+
+    }else{
+
+      await addDoc(
+        collection(
+          db,
+          "employees"
+        ),
+        {
+          ...data,
+          createdAt:serverTimestamp()
+        }
+      );
+
+      alert(
+        "Employee added successfully."
+      );
+
+    }
+
+
+    closeEmployeeModal();
+
+    await loadEmployees();
+
+  }catch(error){
+
+    alert(
+      "Save failed: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+/* =========================
+   DELETE
+========================= */
+
+window.deleteEmployee =
+async function(id){
+
+  const employee =
+    employees.find(
+      e=>e.id === id
+    );
+
+  if(!employee){
+    return;
+  }
+
+
+  const confirmed =
+    confirm(
+      "Delete " +
+      employee.name +
+      " from payroll?"
+    );
+
+  if(!confirmed){
+    return;
+  }
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "employees",
+        id
+      )
+    );
+
+    await loadEmployees();
+
+  }catch(error){
+
+    alert(
+      "Delete failed: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+/* =========================
+   MARK ALL PAID
+========================= */
+
+window.markAllPaid =
+async function(){
+
+  if(!employees.length){
+
+    alert(
+      "No employees found."
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      "Mark current payroll as PAID for all employees?"
+    );
+
+  if(!confirmed){
+    return;
+  }
+
+
+  try{
+
+    for(const employee of employees){
+
+      await updateDoc(
+        doc(
+          db,
+          "employees",
+          employee.id
+        ),
+        {
+          status:"paid",
+          paidAt:serverTimestamp()
+        }
+      );
+
+    }
+
+    await loadEmployees();
+
+    alert(
+      "Payroll status updated to PAID."
+    );
+
+  }catch(error){
+
+    alert(
+      "Payment status update failed: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+/* =========================
+   PRINT PAYSLIP
+========================= */
+
+window.printPayslip =
+function(id){
+
+  const employee =
+    employees.find(
+      e=>e.id === id
+    );
+
+  if(!employee){
+    return;
+  }
+
+
+  const salary =
+    calculateSalary(employee);
+
+
+  const slipNumber =
+    "RK-" +
+    new Date().getFullYear() +
+    "-" +
+    String(
+      employee.employeeId || "EMP"
+    );
+
+
+  const html = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Salary Payslip</title>
+
+<style>
+
+body{
+  font-family:Arial,sans-serif;
+  background:#fff;
+  color:#17233d;
+  margin:0;
+  padding:30px;
+}
+
+.slip{
+  max-width:850px;
+  margin:auto;
+  border:1px solid #ddd;
+  padding:35px;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:2px solid #1647a5;
+  padding-bottom:20px;
+}
+
+.company h1{
+  margin:0;
+  color:#1647a5;
+}
+
+.company p{
+  margin:5px 0;
+}
+
+.meta{
+  text-align:right;
+}
+
+.employee{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.info{
+  padding:12px;
+  background:#f5f7fa;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:25px;
+}
+
+th,td{
+  padding:12px;
+  border:1px solid #ddd;
+  text-align:left;
+}
+
+th{
+  background:#f4f6f9;
+}
+
+.total{
+  margin-top:20px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.total-box{
+  width:300px;
+}
+
+.total-row{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+}
+
+.net{
+  border-top:2px solid #1647a5;
+  font-size:20px;
+  font-weight:bold;
+  color:#1647a5;
+}
+
+.footer{
+  margin-top:45px;
+  text-align:center;
+  color:#777;
+  font-size:12px;
+}
+
+@media print{
+  body{
+    padding:0;
+  }
+
+  .slip{
+    border:0;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="slip">
+
+<div class="header">
+
+<div class="company">
+
+<h1>RK COMPANY</h1>
+
+<p>Professional Payroll & Salary Management</p>
+
+<p>Vadodara, India</p>
+
+</div>
+
+<div class="meta">
+
+<strong>PAYSLIP</strong>
+
+<p>${slipNumber}</p>
+
+<p>2027</p>
+
+</div>
+
+</div>
+
+
+<div class="employee">
+
+<div class="info">
+<strong>Employee</strong><br>
+${escapeHtml(employee.name)}
+</div>
+
+<div class="info">
+<strong>Employee ID</strong><br>
+${escapeHtml(employee.employeeId)}
+</div>
+
+<div class="info">
+<strong>Department</strong><br>
+${escapeHtml(employee.department)}
+</div>
+
+<div class="info">
+<strong>Designation</strong><br>
+${escapeHtml(employee.designation)}
+</div>
+
+<div class="info">
+<strong>Present Days</strong><br>
+${employee.presentDays}
+</div>
+
+<div class="info">
+<strong>Working Days</strong><br>
+${employee.workingDays}
+</div>
+
+</div>
+
+
+<table>
+
+<tr>
+<th>Salary Component</th>
+<th>Amount</th>
+</tr>
+
+<tr>
+<td>Attendance Salary</td>
+<td>${money(salary.attendanceSalary)}</td>
+</tr>
+
+<tr>
+<td>Allowance</td>
+<td>${money(employee.allowance)}</td>
+</tr>
+
+<tr>
+<td>Overtime</td>
+<td>${money(employee.overtime)}</td>
+</tr>
+
+<tr>
+<td>Gross Salary</td>
+<td>${money(salary.gross)}</td>
+</tr>
+
+<tr>
+<td>Deduction</td>
+<td>${money(employee.deduction)}</td>
+</tr>
+
+<tr>
+<td>Tax / TDS</td>
+<td>${money(employee.tax)}</td>
+</tr>
+
+</table>
+
+
+<div class="total">
+
+<div class="total-box">
+
+<div class="total-row">
+<span>Gross Salary</span>
+<strong>${money(salary.gross)}</strong>
+</div>
+
+<div class="total-row">
+<span>Total Deduction</span>
+<strong>${money(salary.totalDeduction)}</strong>
+</div>
+
+<div class="total-row net">
+<span>NET SALARY</span>
+<strong>${money(salary.net)}</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+
+This is a computer-generated salary payslip.
+
+</div>
+
+</div>
+
+
+<script>
+
+window.onload=function(){
+  window.print();
+};
+
+<\/script>
+
+</body>
+
+</html>
+
+`;
+
+
+  const popup =
+    window.open(
+      "",
+      "_blank"
+    );
+
+  popup.document.open();
+
+  popup.document.write(html);
+
+  popup.document.close();
+
+};
+
+
+/* =========================
+   PRINT REPORT
+========================= */
+
+window.printReport =
+function(){
+
+  let totalGross = 0;
+  let totalDeduction = 0;
+  let totalNet = 0;
+
+
+  const rows =
+    employees.map(e=>{
+
+      const salary =
+        calculateSalary(e);
+
+      totalGross +=
+        salary.gross;
+
+      totalDeduction +=
+        salary.totalDeduction;
+
+      totalNet +=
+        salary.net;
+
+
+      return `
+
+<tr>
+
+<td>${escapeHtml(e.name)}</td>
+
+<td>${escapeHtml(e.employeeId)}</td>
+
+<td>${escapeHtml(e.department)}</td>
+
+<td>${money(salary.gross)}</td>
+
+<td>${money(salary.totalDeduction)}</td>
+
+<td>${money(salary.net)}</td>
+
+<td>${e.status === "paid" ? "PAID" : "PENDING"}</td>
+
+</tr>
+
+`;
+
+    }).join("");
+
+
+  const html = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Payroll Report</title>
+
+<style>
+
+body{
+  font-family:Arial,sans-serif;
+  padding:30px;
+  color:#17233d;
+}
+
+h1{
+  color:#1647a5;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:25px;
+}
+
+th,td{
+  border:1px solid #ddd;
+  padding:10px;
+}
+
+th{
+  background:#f2f5fa;
+}
+
+.summary{
+  display:flex;
+  gap:25px;
+  margin-top:20px;
+}
+
+.box{
+  padding:15px;
+  background:#f4f7fb;
+}
+
+@media print{
+  body{
+    padding:0;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>RK COMPANY</h1>
+
+<h2>Monthly Payroll Report</h2>
+
+<p>
+Generated on:
+${new Date().toLocaleString("en-IN")}
+</p>
+
+
+<div class="summary">
+
+<div class="box">
+<strong>Total Employees</strong><br>
+${employees.length}
+</div>
+
+<div class="box">
+<strong>Total Gross</strong><br>
+${money(totalGross)}
+</div>
+
+<div class="box">
+<strong>Total Deduction</strong><br>
+${money(totalDeduction)}
+</div>
+
+<div class="box">
+<strong>Total Net</strong><br>
+${money(totalNet)}
+</div>
+
+</div>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Employee</th>
+<th>ID</th>
+<th>Department</th>
+<th>Gross</th>
+<th>Deduction</th>
+<th>Net Salary</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${rows}
+
+</tbody>
+
+</table>
+
+
+<script>
+
+window.onload=function(){
+  window.print();
+};
+
+<\/script>
+
+</body>
+
+</html>
+
+`;
+
+
+  const popup =
+    window.open(
+      "",
+      "_blank"
+    );
+
+  popup.document.open();
+
+  popup.document.write(html);
+
+  popup.document.close();
+
+};
+
+
+/* =========================
+   CLOSE MODAL OUTSIDE
+========================= */
+
+document
+  .getElementById("employeeModal")
+  .addEventListener(
+    "click",
+    function(event){
+
+      if(
+        event.target === this
+      ){
+
+        closeEmployeeModal();
+
+      }
+
+    }
+  );
 
 </script>
 

@@ -1,1342 +1,764 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RK Company Salary Pay Dashboard</title>
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(130, 177, 255, 0.3), transparent 22%),
-        radial-gradient(circle at bottom right, rgba(255, 196, 92, 0.18), transparent 30%),
-        linear-gradient(135deg, #06152a 0%, #0d2342 24%, #123a72 58%, #2459c5 100%);
-      color: #ecf3ff;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 1600px;
-      margin: 30px auto;
-      padding: 26px;
-      position: relative;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding: 12px 18px; 
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 18px;
-      backdrop-filter: blur(3px);
-    }
-
-    .year-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 52px;
-      height: 32px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #ffd76f, #ffb703);
-      color: #0d1b2d;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      box-shadow: 0 10px 22px rgba(255, 184, 56, 0.35);
-    }
-
-    .status-live {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(32, 212, 157, 0.12);
-      border: 1px solid rgba(32, 212, 157, 0.35);
-      color: #dfffee;
-      font-weight: 700;
-      font-size: 12px;
-      letter-spacing: 0.7px;
-      text-transform: uppercase;
-    }
-
-    .status-live::before {
-      content: "";
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #4ef0b0;
-      box-shadow: 0 0 12px rgba(78, 240, 176, 0.9);
-      display: inline-block;
-    }
-
-    .brand {
-      font-size: 22px;  
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .btn.primary {
-      background: linear-gradient(135deg, #ffd166, #f7b500);
-      color: #10213a;
-    }
-
-    .btn.secondary {
-      background: rgba(255,255,255,0.08);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(0,0,0,0.15);
-    }
-
-    .company-banner {
-      background: linear-gradient(135deg, #071b39 0%, #163d84 40%, #2d66d6 65%, #68a5ff 100%);
-      border-radius: 30px;
-      padding: 36px 32px;
-      box-shadow: 0 24px 45px rgba(0,0,0,0.24);
-      margin-bottom: 28px;
-      border: 1px solid rgba(255,255,255,0.12);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .company-banner::before,
-    .company-banner::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      pointer-events: none;
-    }
-
-    .company-banner::before {
-      width: 260px;
-      height: 260px;
-      right: -40px;
-      top: -80px;
-    }
-
-    .company-banner::after {
-      width: 220px;
-      height: 220px;
-      left: -35px;
-      bottom: -110px;
-    }
-
-    .company-banner .tag {
-      display: inline-block;
-      background: rgba(255,255,255,0.12);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 12px;
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-      font-weight: bold;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .company-banner h1 {
-      margin: 0 0 18px;
-      font-size: 58px;
-      line-height: 1.08;
-      letter-spacing: -1px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .company-banner .subtext {
-      margin: 0 0 22px;
-      font-size: 18px;
-      color: #dfeeff;
-      max-width: 760px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .company-details {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 16px;
-      font-size: 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .company-details div {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
-      padding: 14px 16px;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 22px;
-      margin: 28px 0 18px;
-    }
-
-    .summary-box {
-      background: linear-gradient(135deg, #ffffff 0%, #edf5ff 100%);
-      border-radius: 22px;
-      padding: 24px 20px;
-      box-shadow: 0 18px 32px rgba(10, 32, 70, 0.12);
-      border-top: 7px solid #f4b740;
-      color: #0c1830;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .summary-box::before {
-      content: "";
-      position: absolute;
-      right: -18px;
-      top: -18px;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: rgba(34, 122, 255, 0.08);
-    }
-
-    .summary-box:nth-child(2) {
-      border-top-color: #3bbd9f;
-    }
-
-    .summary-box:nth-child(3) {
-      border-top-color: #6e8bff;
-    }
-
-    .summary-box span {
-      display: block;
-      font-size: 12px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #52627d;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-
-    .summary-box strong {
-      display: block;
-      font-size: 42px;
-      font-weight: 800;
-    }
-
-    .performance-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 0 0 28px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 999px;
-      padding: 10px 16px;
-      color: #ecf6ff;
-      font-weight: 700;
-      backdrop-filter: blur(8px);
-    }
-
-    .chip::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      background: linear-gradient(135deg, #ffd166, #ffb703);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .chip.success::before {
-      background: linear-gradient(135deg, #7cf7d2, #2dd4bf);
-    }
-
-    .chip.info::before {
-      background: linear-gradient(135deg, #9ac4ff, #4f8cff);
-    }
-
-    .form-card {
-      background: rgba(255,255,255,0.97);
-      color: #0d1b2d;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.14);
-      border: 1px solid rgba(180, 200, 235, 0.8);
-      margin-bottom: 24px;
-    }
-
-    .form-header {
-      background: linear-gradient(135deg, #edf4ff, #dfeeff);
-      padding: 22px 24px;
-      font-size: 30px;
-      font-weight: 800;
-      border-bottom: 1px solid #dfe9f8;
-    }
-
-    .form-body {
-      padding: 26px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-weight: 700;
-      color: #21314d;
-    }
-
-    .field input, .field select {
-      padding: 14px 12px;
-      border-radius: 12px;
-      border: 1px solid #d8e2f2;
-      background: #f8fbff;
-      font-size: 15px;
-      color: #0c1d31;
-    }
-
-    .attendance-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-top: 4px;
-      width: 100%;
-    }
-
-    .submit-row {
-      grid-column: 1 / -1;
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 8px;
-    }
-
-    .submit-btn {
-      background: linear-gradient(135deg, #1a52d8, #1b3eb0);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 24px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: space-between;
-      align-items: center;
-      margin: 14px 0 18px;
-      padding: 16px 18px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 18px;
-      backdrop-filter: blur(4px);
-    }
-
-    .toolbar-left,
-    .toolbar-right {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .toolbar input,
-    .toolbar select {
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      border-radius: 12px;
-      padding: 12px 14px;
-      min-width: 180px;
-      font-size: 14px;
-    }
-
-    .toolbar input::placeholder {
-      color: rgba(255,255,255,0.65);
-    }
-
-    .toolbar .small-btn {
-      background: linear-gradient(135deg, #5ca4ff, #2760db);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: 2.1fr 0.9fr;
-      gap: 22px;
-      margin-top: 10px;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.97);
-      color: #0d1b2d;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.14);
-      border: 1px solid rgba(180, 200, 235, 0.8);
-    }
-
-    .table-scroll {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .card-header {
-      background: linear-gradient(135deg, #edf4ff, #dfeeff);
-      padding: 22px 22px;
-      font-size: 30px;
-      font-weight: 800;
-      border-bottom: 1px solid #dfe9f8;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 15px;
-    }
-
-    th, td {
-      border: 1px solid #e5edf9;
-      padding: 14px 12px;
-      text-align: left;
-    }
-
-    th {
-      background: linear-gradient(135deg, #1c50d7, #1d3bb8);
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      font-size: 12px;
-    }
-
-    tr:nth-child(even) {
-      background: #f6faff;
-    }
-
-    .payable {
-      font-weight: 700;
-      color: #0b8d55;
-    }
-
-    .row-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-    }
-
-    .action-btn {
-      border: none;
-      border-radius: 8px;
-      padding: 7px 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .action-btn.edit {
-      background: #e8f2ff;
-      color: #1c56d1;
-    }
-
-    .action-btn.delete {
-      background: #ffe7e7;
-      color: #c93b3b;
-    }
-
-    .action-btn.slip {
-      background: #e5fbf3;
-      color: #087c5a;
-    }
-
-    .action-btn.whatsapp {
-      background: #dcfce7;
-      color: #16803c;
-    }
-
-    .action-btn.sms {
-      background: #fff4d6;
-      color: #946200;
-    }
-
-    .empty-row {
-      text-align: center;
-      padding: 28px 16px;
-      color: #5b6980;
-      font-weight: 700;
-    }
-
-    .side-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-    }
-
-    .side-card {
-      background: linear-gradient(135deg, #0b1730 0%, #102d58 100%);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 16px 30px rgba(0,0,0,0.18);
-    }
-
-    .side-card h3 {
-      margin: 0 0 18px;
-      font-size: 22px;
-      color: #ebf3ff;
-    }
-
-    .mini-stat {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .mini-stat span {
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #cfe0ff;
-    }
-
-    .mini-stat strong {
-      font-size: 26px;
-      color: white;
-    }
-
-    .pay-button {
-      width: 100%;
-      margin-top: 16px;
-      background: linear-gradient(135deg, #ffca5a, #ffb703);
-      border: none;
-      border-radius: 14px;
-      color: #0d1b2d;
-      font-size: 18px;
-      font-weight: 800;
-      padding: 16px 18px;
-      cursor: pointer;
-    }
-
-    .bank-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 14px;
-      margin-top: 12px;
-    }
-
-    .bank-box {
-      background: rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 12px 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .bank-box span {
-      display: block;
-      color: #cfe0ff;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-
-    .bank-box strong {
-      font-size: 17px;
-      word-break: break-word;
-    }
-
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: 1.4fr 0.9fr;
-      gap: 22px;
-      margin-top: 24px;
-    }
-
-    .chart-card {
-      background: rgba(255,255,255,0.97);
-      border-radius: 24px;
-      padding: 24px;
-      color: #0f1d35;
-      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
-      border: 1px solid rgba(180, 200, 235, 0.8);
-    }
-
-    .chart-card h3 {
-      margin: 0 0 18px;
-      font-size: 28px;
-    }
-
-    .chart-bars {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 12px;
-    }
-
-    .bar-row {
-      display: grid;
-      grid-template-columns: 110px 1fr 80px;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-    }
-
-    .bar-bg {
-      height: 18px;
-      background: #e9f1ff;
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .bar-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #1d4ed8, #42a5f5);
-      box-shadow: inset 0 0 10px rgba(255,255,255,0.35);
-    }
-
-    .donut-card {
-      background: linear-gradient(135deg, #0b1730 0%, #102d58 100%);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 18px 35px rgba(0,0,0,0.15);
-    }
-
-    .donut-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 16px 0 10px;
-    }
-
-    .donut {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: conic-gradient(#ffd166 0 38%, #3b82f6 38% 70%, #2dd4bf 70% 100%);
-      position: relative;
-      box-shadow: inset 0 0 15px rgba(255,255,255,0.12);
-    }
-
-    .donut::after {
-      content: "";
-      position: absolute;
-      width: 102px;
-      height: 102px;
-      background: #0d1b2d;
-      border-radius: 50%;
-      top: 39px;
-      left: 39px;
-    }
-
-    .donut-center {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 800;
-      color: white;
-      z-index: 1;
-    }
-
-    .legend {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #e8f3ff;
-      font-weight: 600;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .footer-note {
-      margin-top: 24px;
-      text-align: center;
-      font-size: 14px;
-      color: #dfeaff;
-      font-weight: 600;
-    }
-
-    @media (max-width: 1100px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .container { padding: 14px; }
-      .topbar { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .actions { width: 100%; }
-      .actions .btn { flex: 1 1 100%; }
-      .company-banner h1 { font-size: 36px; }
-      .company-banner { padding: 26px 20px; }
-      .company-banner .subtext { font-size: 16px; }
-      .summary-box strong { font-size: 30px; }
-      .card-header { font-size: 22px; }
-      th, td { font-size: 12px; padding: 10px 8px; }
-      .form-body { padding: 18px; grid-template-columns: 1fr; }
-      .toolbar-left, .toolbar-right, .toolbar input, .toolbar select, .small-btn { width: 100%; }
-      .toolbar { align-items: stretch; }
-      .bar-row { grid-template-columns: 90px minmax(100px, 1fr) 70px; gap: 8px; font-size: 12px; }
-      .bank-details { grid-template-columns: 1fr; }
-      .row-actions { flex-wrap: wrap; min-width: 250px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RK Company | Payroll Dashboard</title>
+<style>
+:root{--blue:#1647a5;--navy:#0b1736;--bg:#f5f7fb;--card:#fff;--line:#e5e9f2;--muted:#667085;--green:#138a52;--red:#c93636}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172033}
+button,input,select{font:inherit}
+.container{max-width:1250px;margin:auto;padding:20px}
+.hero{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border-radius:22px;padding:24px}
+.top{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}
+.brand h1{margin:0;font-size:29px}
+.brand p{margin:6px 0;color:#dbe5ff}
+.badge{display:inline-block;background:#ffffff18;border:1px solid #ffffff30;padding:7px 12px;border-radius:999px;font-size:12px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:700}
+.primary{background:#fff;color:#1242a0}
+.secondary{background:#ffffff14;color:#fff;border:1px solid #ffffff30}
+.company{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:20px}
+.info{padding:12px;border:1px solid #ffffff25;border-radius:12px;background:#ffffff0d}
+.info b{display:block;font-size:11px;color:#cbd7f7;margin-bottom:4px}
+.info span{font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:18px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px}
+.metric small{color:var(--muted)}
+.metric strong{display:block;font-size:25px;margin-top:8px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.section-title h2{margin:0 0 14px;font-size:20px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.field{border:1px solid #d8deea;border-radius:10px;padding:11px 12px;background:#fff}
+.tablewrap{overflow:auto}
+.table{width:100%;border-collapse:collapse;min-width:900px}
+.table th,.table td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:left}
+.table th{font-size:12px;color:var(--muted);background:#fafbfc}
+.table td{font-size:14px}
+.salary{font-weight:800}
+.pill{padding:5px 9px;border-radius:999px;background:#eaf7f0;color:var(--green);font-size:12px;font-weight:700}
+.iconbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 9px;margin-right:4px}
+.danger{color:var(--red)}
+.empty{text-align:center;padding:35px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}
+.barrow{margin:13px 0}
+.barlabel{display:flex;justify-content:space-between;font-size:13px}
+.bar{height:9px;background:#edf0f5;border-radius:99px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:99px}
+.modal{position:fixed;inset:0;background:#0b173688;display:none;align-items:center;justify-content:center;padding:15px;z-index:5}
+.modal.show{display:flex}
+.modalbox{background:#fff;border-radius:18px;padding:22px;max-width:650px;width:100%;max-height:90vh;overflow:auto}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form label{font-size:12px;color:var(--muted);font-weight:700}
+.form input,.form select{width:100%;margin-top:5px;border:1px solid #d8deea;border-radius:9px;padding:10px}
+.full{grid-column:1/-1}
+.modalactions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+footer{text-align:center;color:#7a8497;padding:25px 10px;font-size:12px}
+
+@media(max-width:850px){
+.company{grid-template-columns:repeat(2,1fr)}
+.stats{grid-template-columns:repeat(2,1fr)}
+.two{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+.container{padding:10px}
+.company,.stats,.form{grid-template-columns:1fr}
+.hero{padding:18px}
+.brand h1{font-size:23px}
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="topbar">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div class="brand">RK COMPANY</div>
-        <span class="year-badge">2027</span>
-      </div>
-      <div class="actions">
-        <span class="status-live">Live Payroll</span>
-        <button class="btn primary" id="topPayBtn" type="button">Pay Salary to All</button>
-        <button class="btn secondary" id="sendPayslipsBtn" type="button">Send Payslips</button>
-      </div>
-    </div>
-
-    <div class="company-banner">
-      <div class="tag">Next-Gen Payroll 2027</div>
-      <h1>Intelligent Salary Management System</h1>
-      <p class="subtext">Smart attendance tracking, automated payroll, advanced finance controls, and executive-level reporting for modern businesses.</p>
-      <div class="company-details">
-        <div><strong>Company Type:</strong> Manufacturing Unit</div>
-        <div><strong>Location:</strong> Vadodara, India</div>
-        <div><strong>Phone:</strong> +91 9081266284</div>
-        <div><strong>Email:</strong> rkcompany@gmail.com</div>
-        <div><strong>Website:</strong> www.rkcompany.in</div>
-        <div><strong>Founded:</strong> 2012</div>
-      </div>
-    </div>
-
-    <div class="summary">
-      <div class="summary-box">
-        <span>Total Employees</span>
-        <strong id="totalEmployees">0</strong>
-      </div>
-      <div class="summary-box">
-        <span>Total Salary Payable</span>
-        <strong id="totalSalary">₹0</strong>
-      </div>
-      <div class="summary-box">
-        <span>Departments</span>
-        <strong>6</strong>
-      </div>
-    </div>
-
-    <div class="performance-strip">
-      <div class="chip">On-Time Payroll</div>
-      <div class="chip success">High Attendance</div>
-      <div class="chip info">Executive View</div>
-    </div>
-
-    <div class="form-card">
-      <div class="form-header">Add Employee</div>
-      <form id="employeeForm" class="form-body">
-        <div class="field">
-          <label>Employee Name</label>
-          <input type="text" id="name" placeholder="Enter name" required />
-        </div>
-        <div class="field">
-          <label>Employee ID</label>
-          <input type="number" id="empId" placeholder="Enter ID" required />
-        </div>
-        <div class="field">
-          <label>Department</label>
-          <select id="department" required>
-            <option value="Production">Production</option>
-            <option value="Sales">Sales</option>
-            <option value="Marketing">Marketing</option>
-            <option value="HR">HR</option>
-            <option value="Finance">Finance</option>
-            <option value="IT">IT</option>
-            <option value="Logistics">Logistics</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Designation</label>
-          <input type="text" id="designation" placeholder="Enter designation" required />
-        </div>
-        <div class="field">
-          <label>Present Days</label>
-          <input type="number" id="presentDays" min="0" max="31" placeholder="Attendance days" required />
-        </div>
-        <div class="field">
-          <label>Working Days</label>
-          <input type="number" id="workingDays" min="1" max="31" placeholder="Monthly days" required />
-        </div>
-        <div class="field">
-          <label>Daily Salary</label>
-          <input type="number" id="dailySalary" min="1" placeholder="₹ Amount" required />
-        </div>
-        <div class="field">
-          <label>Bank Name</label>
-          <input type="text" id="bankName" placeholder="Bank name" required />
-        </div>
-        <div class="field">
-          <label>Account Number</label>
-          <input type="text" id="accountNumber" placeholder="Account number" required />
-        </div>
-        <div class="field">
-          <label>IFSC Code</label>
-          <input type="text" id="ifsc" placeholder="IFSC code" required />
-        </div>
-        <div class="field">
-          <label>Phone</label>
-          <input type="tel" id="phone" placeholder="Phone number" required />
-        </div>
-        <div class="submit-row">
-          <button type="submit" class="submit-btn">Add Employee</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <input type="text" id="searchInput" placeholder="Search employee name or ID" />
-        <select id="deptFilter">
-          <option value="All Departments">All Departments</option>
-        </select>
-      </div>
-      <div class="toolbar-right">
-        <button class="small-btn" id="resetFilterBtn">Reset Filter</button>
-      </div>
-    </div>
-
-    <div class="main-grid">
-      <div class="card">
-        <div class="card-header">Employee Salary Pay Details</div>
-        <div class="table-scroll">
-          <table>
-          <thead>
-            <tr>
-              <th>Employee ID</th>
-              <th>Name</th>
-              <th>Department</th>
-              <th>Designation</th>
-              <th>Present Days</th>
-              <th>Working Days</th>
-              <th>Daily Salary</th>
-              <th>Salary Payable</th>
-              <th>Phone</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="employeeTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="side-panel">
-        <div class="side-card">
-          <h3>Payment Summary</h3>
-          <div class="mini-stat">
-            <span>Monthly Pay</span>
-            <strong id="monthlyPay">₹0</strong>
-          </div>
-          <div class="mini-stat">
-            <span>Average Salary</span>
-            <strong id="avgSalary">₹0</strong>
-          </div>
-          <div class="mini-stat">
-            <span>Highest Salary</span>
-            <strong id="highestSalary">₹0</strong>
-          </div>
-          <button class="pay-button" id="sidePayBtn" type="button">Pay Salary to All</button>
-        </div>
-
-        <div class="side-card">
-          <h3>Bank & Status</h3>
-          <div class="bank-details" id="bankDetails"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="analytics-grid">
-      <div class="chart-card">
-        <h3>Department Salary Chart</h3>
-        <div id="chartBars" class="chart-bars"></div>
-      </div>
-
-      <div class="donut-card">
-        <h3 style="margin:0; color:#ebf3ff;">Payroll Mix</h3>
-        <div class="donut-wrap">
-          <div class="donut">
-            <div class="donut-center">65%</div>
-          </div>
-        </div>
-        <div class="legend">
-          <div class="legend-item"><span class="dot" style="background:#ffd166"></span> Attendance 38%</div>
-          <div class="legend-item"><span class="dot" style="background:#3b82f6"></span> Payroll 32%</div>
-          <div class="legend-item"><span class="dot" style="background:#2dd4bf"></span> Bonus 30%</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-note">Salary dashboard generated for official payroll review and employee payment processing.</div>
-  </div>
-
-  <script>
-    const defaultEmployees = [
-      { id: 101, name: 'Ali', department: 'Production', designation: 'Supervisor', presentDays: 23, workingDays: 25, dailySalary: 500, bankName: 'HDFC Bank', accountNumber: '125478963214', ifsc: 'HDFC0001234', phone: '9876543210' },
-      { id: 102, name: 'Ahmed', department: 'Marketing', designation: 'Marketing Officer', presentDays: 20, workingDays: 22, dailySalary: 400, bankName: 'ICICI Bank', accountNumber: '458796321450', ifsc: 'ICIC0004567', phone: '9988776655' },
-      { id: 103, name: 'Usman', department: 'Sales', designation: 'Sales Executive', presentDays: 18, workingDays: 20, dailySalary: 450, bankName: 'State Bank of India', accountNumber: '786541239874', ifsc: 'SBIN0004561', phone: '9090909090' },
-      { id: 104, name: 'Sara', department: 'HR', designation: 'HR Manager', presentDays: 24, workingDays: 26, dailySalary: 600, bankName: 'Axis Bank', accountNumber: '454784123654', ifsc: 'UTIB0003456', phone: '9123456789' },
-      { id: 105, name: 'Hassan', department: 'Finance', designation: 'Accountant', presentDays: 22, workingDays: 24, dailySalary: 550, bankName: 'Bank of Baroda', accountNumber: '221145678963', ifsc: 'BARB0VADARA', phone: '9876123456' },
-      { id: 106, name: 'Bilal', department: 'Logistics', designation: 'Store Keeper', presentDays: 21, workingDays: 23, dailySalary: 420, bankName: 'Punjab National Bank', accountNumber: '336699554412', ifsc: 'PUNB0001122', phone: '9898989898' },
-      { id: 107, name: 'Ayesha', department: 'Administration', designation: 'Office Assistant', presentDays: 19, workingDays: 21, dailySalary: 380, bankName: 'Kotak Mahindra', accountNumber: '778899665544', ifsc: 'KKBK0002323', phone: '9765432109' },
-      { id: 108, name: 'Hamza', department: 'Production', designation: 'Machine Operator', presentDays: 25, workingDays: 27, dailySalary: 470, bankName: 'Canara Bank', accountNumber: '991122334455', ifsc: 'CNRB0005544', phone: '9812345678' },
-      { id: 109, name: 'Zain', department: 'Quality', designation: 'QC Inspector', presentDays: 22, workingDays: 24, dailySalary: 520, bankName: 'Yes Bank', accountNumber: '159753258456', ifsc: 'YESB0000001', phone: '9001122334' },
-      { id: 110, name: 'Nadia', department: 'IT', designation: 'System Analyst', presentDays: 24, workingDays: 25, dailySalary: 700, bankName: 'IDBI Bank', accountNumber: '741258963147', ifsc: 'IBKL0001234', phone: '9811223344' },
-      { id: 111, name: 'Riya', department: 'Accounts', designation: 'Junior Accountant', presentDays: 24, workingDays: 26, dailySalary: 430, bankName: 'Union Bank', accountNumber: '654123987456', ifsc: 'UBIN0554433', phone: '9556677888' },
-      { id: 112, name: 'Karan', department: 'Production', designation: 'Technician', presentDays: 26, workingDays: 28, dailySalary: 480, bankName: 'HDFC Bank', accountNumber: '852369741258', ifsc: 'HDFC0009876', phone: '9887766554' },
-      { id: 113, name: 'Mehul', department: 'Sales', designation: 'Team Lead', presentDays: 22, workingDays: 24, dailySalary: 650, bankName: 'ICICI Bank', accountNumber: '963258741852', ifsc: 'ICIC0007654', phone: '9776655443' },
-      { id: 114, name: 'Pooja', department: 'HR', designation: 'Recruitment Executive', presentDays: 20, workingDays: 22, dailySalary: 410, bankName: 'Axis Bank', accountNumber: '147852369654', ifsc: 'UTIB0002233', phone: '9665544332' },
-      { id: 115, name: 'Rohit', department: 'Transport', designation: 'Driver', presentDays: 24, workingDays: 26, dailySalary: 390, bankName: 'Bank of India', accountNumber: '326598745123', ifsc: 'BKID0003211', phone: '9345678901' },
-      { id: 116, name: 'Sneha', department: 'Admin', designation: 'Receptionist', presentDays: 18, workingDays: 20, dailySalary: 360, bankName: 'Syndicate Bank', accountNumber: '123456789012', ifsc: 'SYNB0000123', phone: '9234567890' },
-      { id: 117, name: 'Ankit', department: 'IT', designation: 'Developer', presentDays: 23, workingDays: 25, dailySalary: 760, bankName: 'Federal Bank', accountNumber: '654987321456', ifsc: 'FDRL0002211', phone: '9823456781' },
-      { id: 118, name: 'Nisha', department: 'Finance', designation: 'Cashier', presentDays: 21, workingDays: 23, dailySalary: 400, bankName: 'Axis Bank', accountNumber: '369852147963', ifsc: 'UTIB0007654', phone: '9966554411' },
-      { id: 119, name: 'Vikas', department: 'Production', designation: 'Operator', presentDays: 27, workingDays: 29, dailySalary: 540, bankName: 'HDFC Bank', accountNumber: '741852963147', ifsc: 'HDFC0004411', phone: '9988001122' },
-      { id: 120, name: 'Priya', department: 'Marketing', designation: 'Digital Marketer', presentDays: 19, workingDays: 21, dailySalary: 500, bankName: 'ICICI Bank', accountNumber: '852147963258', ifsc: 'ICIC0009988', phone: '9766778899' }
-    ];
-
-    let employees = JSON.parse(localStorage.getItem('rkCompanyEmployees') || 'null') || defaultEmployees;
-
-    const currency = new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    });
-
-    const tableBody = document.getElementById('employeeTableBody');
-    const bankDetailsContainer = document.getElementById('bankDetails');
-
-    function saveEmployees() {
-      localStorage.setItem('rkCompanyEmployees', JSON.stringify(employees));
-    }
-
-    function getPayable(employee) {
-      const attendedDays = Math.min(Number(employee.presentDays || 0), Number(employee.workingDays || 0));
-      return attendedDays * Number(employee.dailySalary || 0);
-    }
-
-    function getWhatsAppNumber(phone) {
-      const digits = String(phone || '').replace(/\D/g, '');
-      return digits.length === 10 ? `91${digits}` : digits;
-    }
-
-    function getSalarySlipLink(employee) {
-      if (!/^https?:$/.test(window.location.protocol)) return '';
-      const baseUrl = window.location.href.split('#')[0];
-      return `${baseUrl}#salary-slip=${encodeURIComponent(JSON.stringify(employee))}`;
-    }
-
-    function sendPayslip(employee, channel) {
-      const slipLink = getSalarySlipLink(employee);
-      if (!slipLink) {
-        alert('Pehle is page ko Live Server ya kisi HTTPS website par open karein. File link dusre phone par nahi khulega.');
-        return;
-      }
-
-      const message = `Namaste ${employee.name}, aapki RK Company salary slip download karein: ${slipLink}`;
-      const phone = getWhatsAppNumber(employee.phone);
-      const target = channel === 'whatsapp'
-        ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-        : `sms:+${phone}?body=${encodeURIComponent(message)}`;
-
-      window.open(target, '_blank');
-    }
-
-    function downloadSalarySlip(employee) {
-      const payable = getPayable(employee);
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Salary Slip - ${employee.name}</title><style>body{font-family:Arial,sans-serif;padding:32px;color:#17233b}.slip{max-width:680px;margin:auto;border:2px solid #1c50d7;padding:28px}h1{text-align:center;color:#1c50d7;margin:0 0 6px}h2{text-align:center;margin:0 0 24px;font-size:16px;font-weight:normal}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #dce5f4;padding-top:18px}.item{padding:10px;background:#f4f8ff}.item span{display:block;color:#64748b;font-size:12px;margin-bottom:4px}.total{margin-top:22px;padding:18px;background:#e8f2ff;font-size:24px;font-weight:bold;display:flex;justify-content:space-between}@media print{button{display:none}}button{margin-top:22px;padding:11px 18px;background:#1c50d7;color:#fff;border:0;border-radius:7px;cursor:pointer}</style></head><body><main class="slip"><h1>RK COMPANY</h1><h2>Monthly Salary Slip</h2><div class="grid"><div class="item"><span>Employee ID</span>${employee.id}</div><div class="item"><span>Employee Name</span>${employee.name}</div><div class="item"><span>Department</span>${employee.department}</div><div class="item"><span>Designation</span>${employee.designation}</div><div class="item"><span>Phone</span>${employee.phone}</div><div class="item"><span>Bank Account</span>${employee.bankName} - ${employee.accountNumber}</div><div class="item"><span>Attendance</span>${employee.presentDays} / ${employee.workingDays} days</div><div class="item"><span>Daily Salary</span>${currency.format(employee.dailySalary)}</div></div><div class="total"><span>Salary Payable</span><span>${currency.format(payable)}</span></div><button onclick="window.print()">Print / Save PDF</button></main></body></html>`;
-      const blob = new Blob([html], { type: 'text/html' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `salary-slip-${employee.id}.html`;
-      link.click();
-      URL.revokeObjectURL(link.href);
-    }
-
-    function openSharedSalarySlip() {
-      const prefix = '#salary-slip=';
-      if (!window.location.hash.startsWith(prefix)) return;
-
-      try {
-        const employee = JSON.parse(decodeURIComponent(window.location.hash.slice(prefix.length)));
-        document.body.innerHTML = `<main class="shared-slip-page"><section class="shared-slip"><h1>RK COMPANY</h1><h2>Monthly Salary Slip</h2><p><b>Employee:</b> ${employee.name} (${employee.id})</p><p><b>Department:</b> ${employee.department}</p><p><b>Designation:</b> ${employee.designation}</p><p><b>Attendance:</b> ${employee.presentDays} / ${employee.workingDays} days</p><p><b>Phone:</b> ${employee.phone}</p><h2>Salary Payable: ${currency.format(getPayable(employee))}</h2><button id="downloadSharedSlip">Download Salary Slip</button><button id="printSharedSlip">Print / Save PDF</button></section></main>`;
-        document.getElementById('downloadSharedSlip').addEventListener('click', () => downloadSalarySlip(employee));
-        document.getElementById('printSharedSlip').addEventListener('click', () => printSalarySlip(employee));
-      } catch (error) {
-        alert('Salary slip link invalid hai.');
-      }
-    }
-
-    function printSalarySlip(employee) {
-      const slipWindow = window.open('', '_blank', 'width=760,height=860');
-      if (!slipWindow) {
-        alert('Please allow pop-ups to print the salary slip.');
-        return;
-      }
-
-      const payable = getPayable(employee);
-      slipWindow.document.write(`
-        <!doctype html><html><head><title>Salary Slip - ${employee.name}</title>
-        <style>
-          body{font-family:Arial,sans-serif;padding:32px;color:#17233b} .slip{max-width:680px;margin:auto;border:2px solid #1c50d7;padding:28px}
-          h1{text-align:center;c  olor:#1c50d7;margin:0 0 6px} h2{text-align:center;margin:0 0 24px;font-size:16px;font-weight:normal}
-          .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #dce5f4;padding-top:18px}
-          .item{padding:10px;background:#f4f8ff}.item span{display:block;color:#64748b;font-size:12px;margin-bottom:4px}.total{margin-top:22px;padding:18px;background:#e8f2ff;font-size:24px;font-weight:bold;display:flex;justify-content:space-between}
-          @media print{button{display:none}} button{margin-top:22px;padding:11px 18px;background:#1c50d7;color:#fff;border:0;border-radius:7px;cursor:pointer}
-         </style></head><body><main class="slip"><h1>RK COMPANY</h1><h2>Monthly Salary Slip</h2>
-        <div class="grid"><div class="item"><span>Employee ID</span>${employee.id}</div><div class="item"><span>Employee Name</span>${employee.name}</div>
-        <div class="item"><span>Department</span>${employee.department}</div><div class="item"><span>Designation</span>${employee.designation}</div>
-        <div class="item"><span>Phone</span>${employee.phone}</div><div class="item"><span>Bank Account</span>${employee.bankName} - ${employee.accountNumber}</div>
-        <div class="item"><span>Attendance</span>${employee.presentDays} / ${employee.workingDays} days</div><div class="item"><span>Daily Salary</span>${currency.format(employee.dailySalary)}</div></div>
-        <div class="total"><span>Salary Payable</span><span>${currency.format(payable)}</span></div>
-        <button onclick="window.print()">Print / Save PDF</button></main></body></html>`);
-      slipWindow.document.close();
-    }
-
-    function paySalaryToAll() {
-      if (!employees.length) {
-        alert('Please add at least one employee first.');
-        return;
-      }
-      alert(`Salary payable for ${employees.length} employees is ${currency.format(employees.reduce((total, employee) => total + getPayable(employee), 0))}. Payment marked for processing.`);
-    }
-
-    function sendAllPayslips() {
-      if (!employees.length) {
-        alert('Please add at least one employee first.');
-        return;
-      }
-      const slipWindow = window.open('', '_blank');
-      if (!slipWindow) {
-        alert('Please allow pop-ups to open all salary slips.');
-        return;
-      }
-      slipWindow.document.write('<html><head><title>RK Company Salary Slips</title><style>body{font-family:Arial;padding:24px}.slip{border:2px solid #1c50d7;padding:18px;margin:0 auto 20px;max-width:680px;page-break-after:always}h1{color:#1c50d7}button{padding:10px 16px;background:#1c50d7;color:white;border:0;border-radius:6px}@media print{button{display:none}}</style></head><body>');
-      employees.forEach(employee => {
-        slipWindow.document.write(`<section class="slip"><h1>RK COMPANY - Salary Slip</h1><p><b>Employee:</b> ${employee.name} (${employee.id})</p><p><b>Department:</b> ${employee.department} | <b>Designation:</b> ${employee.designation}</p><p><b>Phone:</b> ${employee.phone}</p><p><b>Attendance:</b> ${employee.presentDays}/${employee.workingDays} days</p><h2>Salary Payable: ${currency.format(getPayable(employee))}</h2></section>`);
-      });
-      slipWindow.document.write('<button onclick="window.print()">Print / Save All PDFs</button></body></html>');
-      slipWindow.document.close();
-    }
-
-    function getFilteredEmployees() {
-      const searchValue = document.getElementById('searchInput')?.value.trim().toLowerCase() || '';
-      const selectedDepartment = document.getElementById('deptFilter')?.value || 'All Departments';
-
-      return employees.filter(employee => {
-        const matchesSearch = !searchValue ||
-          employee.name.toLowerCase().includes(searchValue) ||
-          String(employee.id).includes(searchValue);
-
-        const matchesDept = selectedDepartment === 'All Departments' || employee.department === selectedDepartment;
-        return matchesSearch && matchesDept;
-      });
-    }
-
-    function populateDepartmentFilter() {
-      const deptFilter = document.getElementById('deptFilter');
-      const departments = Array.from(new Set(employees.map(e => e.department))).sort();
-
-      deptFilter.innerHTML = '<option value="All Departments">All Departments</option>' +
-        departments.map(dept => `<option value="${dept}">${dept}</option>`).join('');
-
-      const currentValue = deptFilter.dataset.selected || 'All Departments';
-      deptFilter.value = departments.includes(currentValue) ? currentValue : 'All Departments';
-    }
-
-    function renderTable() {
-      tableBody.innerHTML = '';
-      const filteredEmployees = getFilteredEmployees();
-
-      if (!filteredEmployees.length) {
-        tableBody.innerHTML = `<tr><td colspan="10" class="empty-row">No employee matches the selected filter.</td></tr>`;
-        return;
-      }
-
-      filteredEmployees.forEach(employee => {
-        const attendedDays = Math.min(Number(employee.presentDays || 0), Number(employee.workingDays || 0));
-        const payable = getPayable(employee);
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${employee.id}</td>
-          <td>${employee.name}</td>
-          <td>${employee.department}</td>
-          <td>${employee.designation}</td>
-          <td>${attendedDays}</td>
-          <td>${employee.workingDays}</td>
-          <td>${currency.format(employee.dailySalary)}</td>
-          <td class="payable">${currency.format(payable)}</td>
-          <td><a href="tel:${employee.phone}">${employee.phone}</a></td>
-          <td>
-            <div class="row-actions">
-              <button class="action-btn slip" data-slip-id="${employee.id}">Slip</button>
-              <button class="action-btn whatsapp" data-whatsapp-id="${employee.id}">WhatsApp</button>
-              <button class="action-btn sms" data-sms-id="${employee.id}">SMS</button>
-              <button class="action-btn edit" data-edit-id="${employee.id}">Edit</button>
-              <button class="action-btn delete" data-delete-id="${employee.id}">Delete</button>
-            </div>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-
-      bindActionButtons();
-    }
-
-    function renderBankDetails() {
-      bankDetailsContainer.innerHTML = '';
-
-      employees.forEach(employee => {
-        const box = document.createElement('div');
-        box.className = 'bank-box';
-        box.innerHTML = `
-          <span>${employee.name}</span>
-          <strong>${employee.bankName}<br>${employee.accountNumber}<br>${employee.ifsc}</strong>
-        `;
-        bankDetailsContainer.appendChild(box);
-      });
-    }
-
-    function renderSummary() {
-      let totalSalary = 0;
-      let highestSalary = 0;
-
-      employees.forEach(employee => {
-        const attendedDays = Math.min(Number(employee.presentDays || 0), Number(employee.workingDays || 0));
-        const payable = attendedDays * Number(employee.dailySalary || 0);
-        totalSalary += payable;
-        highestSalary = Math.max(highestSalary, payable);
-      });
-
-      const departmentCount = new Set(employees.map(emp => emp.department)).size;
-
-      document.getElementById('totalEmployees').textContent = employees.length;
-      document.getElementById('totalSalary').textContent = currency.format(totalSalary);
-      document.getElementById('monthlyPay').textContent = currency.format(totalSalary);
-      document.getElementById('avgSalary').textContent = currency.format(employees.length ? Math.round(totalSalary / employees.length) : 0);
-      document.getElementById('highestSalary').textContent = currency.format(highestSalary);
-      document.querySelector('.summary-box:nth-child(3) strong').textContent = departmentCount;
-    }
-
-    function renderChart() {
-      const departmentTotals = {};
-
-      employees.forEach(employee => {
-        const attendedDays = Math.min(Number(employee.presentDays || 0), Number(employee.workingDays || 0));
-        const payable = attendedDays * Number(employee.dailySalary || 0);
-        departmentTotals[employee.department] = (departmentTotals[employee.department] || 0) + payable;
-      });
-
-      const maxValue = Math.max(...Object.values(departmentTotals), 1);
-      const chartContainer = document.getElementById('chartBars');
-      chartContainer.innerHTML = '';
-
-      Object.entries(departmentTotals).forEach(([department, total]) => {
-        const row = document.createElement('div');
-        row.className = 'bar-row';
-
-        const width = (total / maxValue) * 100;
-        row.innerHTML = `
-          <span>${department}</span>
-          <div class="bar-bg"><div class="bar-fill" style="width:${width}%"></div></div>
-          <span>${currency.format(total)}</span>
-        `;
-
-        chartContainer.appendChild(row);
-      });
-    }
-
-    function bindActionButtons() {
-      document.querySelectorAll('.action-btn.delete').forEach(btn => {
-        btn.addEventListener('click', function () {
-          const id = Number(this.dataset.deleteId);
-          const index = employees.findIndex(emp => emp.id === id);
-          if (index >= 0) {
-            employees.splice(index, 1);
-            saveEmployees();
-            renderAll();
-          }
-        });
-      });
-
-      document.querySelectorAll('.action-btn.edit').forEach(btn => {
-        btn.addEventListener('click', function () {
-          const id = Number(this.dataset.editId);
-          const employee = employees.find(emp => emp.id === id);
-          if (!employee) return;
-
-          document.getElementById('empId').value = employee.id;
-          document.getElementById('name').value = employee.name;
-          document.getElementById('department').value = employee.department;
-          document.getElementById('designation').value = employee.designation;
-          document.getElementById('presentDays').value = employee.presentDays;
-          document.getElementById('workingDays').value = employee.workingDays;
-          document.getElementById('dailySalary').value = employee.dailySalary;
-          document.getElementById('bankName').value = employee.bankName;
-          document.getElementById('accountNumber').value = employee.accountNumber;
-          document.getElementById('ifsc').value = employee.ifsc;
-          document.getElementById('phone').value = employee.phone;
-
-          const index = employees.findIndex(emp => emp.id === id);
-          if (index >= 0) {
-            employees.splice(index, 1);
-            saveEmployees();
-          }
-
-          document.getElementById('name').focus();
-        });
-      });
-
-      document.querySelectorAll('.action-btn.slip').forEach(btn => {
-        btn.addEventListener('click', function () {
-          const employee = employees.find(emp => emp.id === Number(this.dataset.slipId));
-          if (employee) printSalarySlip(employee);
-        });
-      });
-
-      document.querySelectorAll('.action-btn.whatsapp').forEach(btn => {
-        btn.addEventListener('click', function () {
-          const employee = employees.find(emp => emp.id === Number(this.dataset.whatsappId));
-          if (employee) sendPayslip(employee, 'whatsapp');
-        });
-      });
-
-      document.querySelectorAll('.action-btn.sms').forEach(btn => {
-        btn.addEventListener('click', function () {
-          const employee = employees.find(emp => emp.id === Number(this.dataset.smsId));
-          if (employee) sendPayslip(employee, 'sms');
-        });
-      });
-    }
-
-    function renderAll() {
-      populateDepartmentFilter();
-      renderTable();
-      renderBankDetails();
-      renderSummary();
-      renderChart();
-    }
-
-    document.getElementById('searchInput').addEventListener('input', renderTable);
-    document.getElementById('deptFilter').addEventListener('change', renderTable);
-
-    document.getElementById('resetFilterBtn').addEventListener('click', function () {
-      document.getElementById('searchInput').value = '';
-      const deptFilter = document.getElementById('deptFilter');
-      deptFilter.value = 'All Departments';
-      deptFilter.dataset.selected = 'All Departments';
-      renderTable();
-    });
-
-    document.getElementById('employeeForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const newEmployee = {
-        id: Number(document.getElementById('empId').value),
-        name: document.getElementById('name').value.trim(),
-        department: document.getElementById('department').value,
-        designation: document.getElementById('designation').value.trim(),
-        presentDays: Number(document.getElementById('presentDays').value),
-        workingDays: Number(document.getElementById('workingDays').value),
-        dailySalary: Number(document.getElementById('dailySalary').value),
-        bankName: document.getElementById('bankName').value.trim(),
-        accountNumber: document.getElementById('accountNumber').value.trim(),
-        ifsc: document.getElementById('ifsc').value.trim(),
-        phone: document.getElementById('phone').value.trim()
-      };
-
-      if (newEmployee.presentDays > newEmployee.workingDays) {
-        newEmployee.presentDays = newEmployee.workingDays;
-      }
-
-      const existingIndex = employees.findIndex(emp => emp.id === newEmployee.id);
-      if (existingIndex >= 0) {
-        employees[existingIndex] = newEmployee;
-      } else {
-        employees.push(newEmployee);
-      }
-
-      saveEmployees();
-      const deptFilter = document.getElementById('deptFilter');
-      deptFilter.dataset.selected = deptFilter.value;
-      this.reset();
-      renderAll();
-    });
-
-    document.getElementById('topPayBtn').addEventListener('click', paySalaryToAll);
-    document.getElementById('sidePayBtn').addEventListener('click', paySalaryToAll);
-    document.getElementById('sendPayslipsBtn').addEventListener('click', sendAllPayslips);
-
-    renderAll();
-    openSharedSalarySlip();
-  </script>
+
+<div class="container">
+
+<header class="hero">
+
+<div class="top">
+
+<div class="brand">
+<h1>RK COMPANY</h1>
+<p>Professional Payroll & Salary Management</p>
+<span class="badge">DEMO VERSION • 2027</span>
+</div>
+
+<div class="actions">
+<button class="btn primary" onclick="openModal()">+ Add Employee</button>
+<button class="btn secondary" onclick="printReport()">Print Report</button>
+</div>
+
+</div>
+
+<div class="company">
+
+<div class="info">
+<b>COMPANY TYPE</b>
+<span>Manufacturing Unit</span>
+</div>
+
+<div class="info">
+<b>LOCATION</b>
+<span>Vadodara, India</span>
+</div>
+
+<div class="info">
+<b>PHONE</b>
+<span>+91 XXXXX XXXXX</span>
+</div>
+
+<div class="info">
+<b>EMAIL</b>
+<span>payroll@example.com</span>
+</div>
+
+<div class="info">
+<b>STATUS</b>
+<span>● Payroll Active</span>
+</div>
+
+</div>
+
+</header>
+
+<section class="stats">
+
+<div class="card metric">
+<small>Total Employees</small>
+<strong id="count">0</strong>
+</div>
+
+<div class="card metric">
+<small>Total Salary Payable</small>
+<strong id="total">₹0</strong>
+</div>
+
+<div class="card metric">
+<small>Average Salary</small>
+<strong id="avg">₹0</strong>
+</div>
+
+<div class="card metric">
+<small>Departments</small>
+<strong id="departments">0</strong>
+</div>
+
+</section>
+
+<section class="card">
+
+<div class="section-title">
+<h2>Employee Payroll</h2>
+<span class="pill">Local Demo Storage</span>
+</div>
+
+<div class="toolbar">
+
+<input
+id="search"
+class="field"
+placeholder="Search employee or ID..."
+oninput="render()"
+>
+
+<select
+id="filter"
+class="field"
+onchange="render()"
+>
+<option value="">All Departments</option>
+</select>
+
+<button
+class="btn"
+style="background:#edf3ff;color:#1647a5"
+onclick="resetDemo()"
+>
+Reset Demo Data
+</button>
+
+</div>
+
+<div class="tablewrap">
+
+<table class="table">
+
+<thead>
+<tr>
+<th>Employee</th>
+<th>ID</th>
+<th>Department</th>
+<th>Days</th>
+<th>Daily Pay</th>
+<th>Salary</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="rows"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<div class="two">
+
+<section class="card">
+
+<h2>Department Salary</h2>
+
+<div id="chart"></div>
+
+</section>
+
+<section class="card">
+
+<h2>Payroll Notes</h2>
+
+<p class="note">
+This is a front-end demo for presentation and testing.
+It does not make real bank payments, send SMS/WhatsApp automatically,
+or provide secure payroll storage.
+</p>
+
+<p class="note">
+For a real company deployment, add authenticated users,
+a secure database, server-side validation, audit logs and encrypted payroll data.
+</p>
+
+</section>
+
+</div>
+
+<footer>
+RK Company Payroll Dashboard • Demo data only • Replace all demo/company details before delivery
+</footer>
+
+</div>
+
+<div id="modal" class="modal">
+
+<div class="modalbox">
+
+<h2 id="modalTitle">Add Employee</h2>
+
+<form class="form" onsubmit="saveEmployee(event)">
+
+<input type="hidden" id="editId">
+
+<label>
+Employee Name
+<input id="name" required>
+</label>
+
+<label>
+Employee ID
+<input id="empid" required>
+</label>
+
+<label>
+Department
+<select id="dept">
+<option>Production</option>
+<option>Sales</option>
+<option>Marketing</option>
+<option>HR</option>
+<option>Finance</option>
+<option>IT</option>
+<option>Logistics</option>
+</select>
+</label>
+
+<label>
+Present Days
+<input id="days" type="number" min="0" value="26" required>
+</label>
+
+<label>
+Working Days
+<input id="working" type="number" min="1" value="26" required>
+</label>
+
+<label>
+Daily Salary
+<input id="daily" type="number" min="0" value="800" required>
+</label>
+
+<label class="full">
+Designation
+<input id="designation" placeholder="e.g. Supervisor">
+</label>
+
+<div class="full note">
+Demo only: do not enter real bank account numbers,
+IFSC codes or other sensitive employee data on this GitHub Pages demo.
+</div>
+
+<div class="modalactions full">
+
+<button
+type="button"
+class="btn"
+onclick="closeModal()"
+>
+Cancel
+</button>
+
+<button
+class="btn primary"
+type="submit"
+>
+Save Employee
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<script>
+
+const DEMO=[
+
+{
+name:"Aarav Patel",
+id:"RK001",
+dept:"Production",
+days:26,
+working:26,
+daily:900,
+designation:"Supervisor"
+},
+
+{
+name:"Diya Shah",
+id:"RK002",
+dept:"HR",
+days:25,
+working:26,
+daily:850,
+designation:"HR Executive"
+},
+
+{
+name:"Kabir Mehta",
+id:"RK003",
+dept:"Finance",
+days:24,
+working:26,
+daily:1000,
+designation:"Account Executive"
+},
+
+{
+name:"Mira Joshi",
+id:"RK004",
+dept:"Sales",
+days:26,
+working:26,
+daily:800,
+designation:"Sales Executive"
+},
+
+{
+name:"Vivaan Desai",
+id:"RK005",
+dept:"IT",
+days:23,
+working:26,
+daily:1100,
+designation:"IT Support"
+},
+
+{
+name:"Anaya Shah",
+id:"RK006",
+dept:"Marketing",
+days:25,
+working:26,
+daily:950,
+designation:"Marketing Executive"
+}
+
+];
+
+let data=
+JSON.parse(localStorage.getItem("rkPayrollDemo")||"null")
+||DEMO;
+
+const money=n=>
+"₹"+Math.round(n).toLocaleString("en-IN");
+
+const salary=e=>
+Math.min(+e.days,+e.working)*+e.daily;
+
+function save(){
+
+localStorage.setItem(
+"rkPayrollDemo",
+JSON.stringify(data)
+);
+
+}
+
+function resetDemo(){
+
+if(confirm("Reset the demo employee list?")){
+
+data=DEMO.map(x=>({...x}));
+
+save();
+
+render();
+
+}
+
+}
+
+function render(){
+
+const q=
+document.getElementById("search")
+.value
+.toLowerCase();
+
+const f=
+document.getElementById("filter")
+.value;
+
+const depts=
+[...new Set(data.map(e=>e.dept))]
+.sort();
+
+document.getElementById("filter").innerHTML=
+'<option value="">All Departments</option>'+
+depts.map(d=>
+`<option ${d===f?"selected":""}>${d}</option>`
+).join("");
+
+const list=data.filter(e=>
+
+(!q ||
+(`${e.name} ${e.id} ${e.dept}`)
+.toLowerCase()
+.includes(q))
+
+&&
+
+(!f || e.dept===f)
+
+);
+
+document.getElementById("rows").innerHTML=
+
+list.length
+
+?
+
+list.map(e=>
+
+`<tr>
+
+<td>
+<b>${esc(e.name)}</b>
+<br>
+<span style="color:#667085;font-size:12px">
+${esc(e.designation||"")}
+</span>
+</td>
+
+<td>${esc(e.id)}</td>
+
+<td>${esc(e.dept)}</td>
+
+<td>${e.days}/${e.working}</td>
+
+<td>${money(e.daily)}</td>
+
+<td class="salary">
+${money(salary(e))}
+</td>
+
+<td>
+
+<button
+class="iconbtn"
+onclick="editEmployee('${e.id}')"
+>
+Edit
+</button>
+
+<button
+class="iconbtn danger"
+onclick="deleteEmployee('${e.id}')"
+>
+Delete
+</button>
+
+</td>
+
+</tr>`
+
+).join("")
+
+:
+
+`<tr>
+<td colspan="7" class="empty">
+No employees found
+</td>
+</tr>`;
+
+const total=
+data.reduce(
+(s,e)=>s+salary(e),
+0
+);
+
+document.getElementById("count")
+.textContent=data.length;
+
+document.getElementById("total")
+.textContent=money(total);
+
+document.getElementById("avg")
+.textContent=
+money(data.length?total/data.length:0);
+
+document.getElementById("departments")
+.textContent=depts.length;
+
+const sums={};
+
+data.forEach(e=>{
+
+sums[e.dept]=
+(sums[e.dept]||0)+salary(e);
+
+});
+
+const max=
+Math.max(
+...Object.values(sums),
+1
+);
+
+document.getElementById("chart").innerHTML=
+
+Object.entries(sums)
+.sort((a,b)=>b[1]-a[1])
+.map(([d,v])=>
+
+`<div class="barrow">
+
+<div class="barlabel">
+
+<span>${esc(d)}</span>
+
+<b>${money(v)}</b>
+
+</div>
+
+<div class="bar">
+
+<i style="width:${v/max*100}%"></i>
+
+</div>
+
+</div>`
+
+)
+.join("")
+
+||
+
+'<p class="note">No data</p>';
+
+}
+
+function esc(s){
+
+return String(s).replace(
+/[&<>"']/g,
+c=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+
+}[c])
+);
+
+}
+
+function openModal(id=null){
+
+document
+.getElementById("modal")
+.classList.add("show");
+
+document
+.getElementById("editId")
+.value=id||"";
+
+if(id){
+
+const e=
+data.find(x=>x.id===id);
+
+document
+.getElementById("modalTitle")
+.textContent="Edit Employee";
+
+[
+"name",
+"empid",
+"dept",
+"days",
+"working",
+"daily",
+"designation"
+]
+.forEach(k=>
+
+document.getElementById(k).value=
+k==="empid"
+?e.id
+:e[k]||""
+
+);
+
+}
+
+else{
+
+document
+.getElementById("modalTitle")
+.textContent="Add Employee";
+
+document
+.querySelector("form")
+.reset();
+
+document
+.getElementById("days")
+.value=26;
+
+document
+.getElementById("working")
+.value=26;
+
+document
+.getElementById("daily")
+.value=800;
+
+}
+
+}
+
+function closeModal(){
+
+document
+.getElementById("modal")
+.classList.remove("show");
+
+}
+
+function saveEmployee(ev){
+
+ev.preventDefault();
+
+const old=
+document.getElementById("editId").value;
+
+const e={
+
+name:name.value.trim(),
+
+id:empid.value.trim(),
+
+dept:dept.value,
+
+days:+days.value,
+
+working:+working.value,
+
+daily:+daily.value,
+
+designation:designation.value.trim()
+
+};
+
+if(old){
+
+const i=
+data.findIndex(x=>x.id===old);
+
+data[i]=e;
+
+}
+
+else{
+
+if(data.some(x=>x.id===e.id)){
+
+alert("Employee ID already exists.");
+
+return;
+
+}
+
+data.push(e);
+
+}
+
+save();
+
+closeModal();
+
+render();
+
+}
+
+function editEmployee(id){
+
+openModal(id);
+
+}
+
+function deleteEmployee(id){
+
+if(confirm("Delete this employee?")){
+
+data=
+data.filter(e=>e.id!==id);
+
+save();
+
+render();
+
+}
+
+}
+
+function printReport(){
+
+window.print();
+
+}
+
+render();
+
+</script>
+
 </body>
 </html>
- 

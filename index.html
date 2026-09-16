@@ -1058,7 +1058,8 @@ const firebaseConfig = {
   appId: "1:1083446878787:web:ec9de2ec1278a696686af6",
   measurementId: "G-JV5SNLVX9L"
 };
-
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 let employees = [];
 
 let editingId = null;
